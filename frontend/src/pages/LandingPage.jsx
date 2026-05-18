@@ -43,7 +43,7 @@ export default function LandingPage() {
   return (
     <div className="overflow-hidden">
       {/* ===== HERO SECTION ===== */}
-      <section className="gradient-hero relative min-h-[90vh] flex items-center">
+      <section className="gradient-hero relative pt-32 pb-40 lg:pt-40 lg:pb-48">
         {/* Background decorations */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-accent/10 blur-3xl animate-float"></div>
@@ -69,13 +69,13 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-wrap gap-4 animate-fade-in-up animation-delay-300">
                 <Link to="/signup">
-                  <Button size="lg" className="bg-accent text-accent-foreground hover:bg-accent/90 h-12 px-8 text-base font-semibold rounded-xl shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-300">
+                  <Button size="lg" className="bg-accent text-gray-900 hover:bg-accent/90 h-12 px-8 text-base font-bold rounded-xl shadow-lg shadow-accent/25 hover:shadow-xl hover:shadow-accent/30 transition-all duration-300">
                     Mulai Sekarang
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
                 <Link to="/signin">
-                  <Button size="lg" variant="outline" className="h-12 px-8 text-base font-semibold rounded-xl border-white/30 text-white hover:bg-white/10 hover:text-white transition-all duration-300">
+                  <Button size="lg" variant="outline" className="bg-transparent h-12 px-8 text-base font-semibold rounded-xl border-white/40 text-white hover:bg-white/10 transition-all duration-300">
                     Masuk Akun
                   </Button>
                 </Link>
@@ -169,14 +169,14 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FEATURES SECTION ===== */}
-      <section className="py-20 md:py-28">
+      <section className="py-8 md:py-10">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <div className="text-center mb-8">
             <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-1.5 rounded-full mb-4">Fitur Unggulan</span>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">
               Kenapa Harus <span className="gradient-text">TitipHub</span>?
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+            <p className="text-muted-foreground max-w-2xl mx-auto text-base">
               Platform jasa titip yang dirancang untuk memberikan pengalaman terbaik bagi Anda.
             </p>
           </div>
@@ -195,28 +195,28 @@ export default function LandingPage() {
       </section>
 
       {/* ===== HOW IT WORKS ===== */}
-      <section className="py-20 md:py-28 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent">
+      <section className="py-8 md:py-10 bg-gradient-to-b from-transparent via-primary/[0.03] to-transparent">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <div className="text-center mb-8">
             <span className="inline-block bg-secondary/10 text-secondary text-sm font-semibold px-4 py-1.5 rounded-full mb-4">Cara Kerja</span>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">
               Semudah <span className="gradient-text">4 Langkah</span>
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+            <p className="text-muted-foreground max-w-2xl mx-auto text-base">
               Proses titip barang di TitipHub sangat simpel dan transparan.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {steps.map((s, i) => (
               <div key={i} className="relative group">
                 <div className="card-premium p-6">
-                  <span className="text-5xl font-black text-primary/10 group-hover:text-primary/20 transition-colors duration-300">{s.num}</span>
+                  <span className="text-4xl font-black text-primary/40 group-hover:text-primary transition-colors duration-300">{s.num}</span>
                   <h3 className="font-bold text-lg mt-2 mb-2">{s.title}</h3>
                   <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
                 </div>
                 {i < 3 && (
-                  <div className="hidden lg:block absolute top-1/2 -right-4 z-10">
-                    <ChevronRight className="w-6 h-6 text-secondary/40" />
+                  <div className="hidden lg:flex absolute top-1/2 -right-3 -translate-y-1/2 z-10 w-6 h-6 bg-white rounded-full items-center justify-center shadow-sm border border-gray-100">
+                    <ChevronRight className="w-4 h-4 text-primary/50" />
                   </div>
                 )}
               </div>
@@ -226,26 +226,26 @@ export default function LandingPage() {
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <section className="py-20 md:py-28">
+      <section className="py-8 md:py-10">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
+          <div className="text-center mb-8">
             <span className="inline-block bg-accent/15 text-primary text-sm font-semibold px-4 py-1.5 rounded-full mb-4">Testimoni</span>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-2xl md:text-3xl font-bold mb-3">
               Apa Kata <span className="gradient-text">Mereka</span>?
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+            <p className="text-muted-foreground max-w-2xl mx-auto text-base">
               Dengar langsung dari pelanggan setia TitipHub.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
               <div key={i} className="card-premium p-6">
-                <div className="flex gap-1 mb-4">
+                <div className="flex gap-1 mb-3">
                   {[...Array(5)].map((_, j) => (
                     <Star key={j} className={`w-4 h-4 ${j < t.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-200'}`} />
                   ))}
                 </div>
-                <p className="text-foreground/80 text-sm leading-relaxed mb-6 italic">"{t.text}"</p>
+                <p className="text-foreground/80 text-sm leading-relaxed mb-5 italic">"{t.text}"</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center text-white font-bold text-sm">
                     {t.name.charAt(0)}
@@ -262,27 +262,27 @@ export default function LandingPage() {
       </section>
 
       {/* ===== CTA SECTION ===== */}
-      <section className="py-20 md:py-28">
+      <section className="py-8 md:py-12 mb-10">
         <div className="container mx-auto px-4">
-          <div className="gradient-hero rounded-3xl p-10 md:p-16 text-center text-white relative overflow-hidden">
+          <div className="gradient-hero rounded-3xl p-8 md:p-10 text-center text-white relative overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute -top-20 -right-20 w-60 h-60 bg-accent/20 rounded-full blur-3xl"></div>
               <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-secondary/20 rounded-full blur-3xl"></div>
             </div>
             <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Siap Menitipkan Barang?</h2>
-              <p className="text-white/80 text-lg mb-8 max-w-lg mx-auto">
+              <h2 className="text-2xl md:text-3xl font-bold mb-3">Siap Menitipkan Barang?</h2>
+              <p className="text-white/80 text-base mb-6 max-w-lg mx-auto">
                 Bergabung bersama ratusan pelanggan puas lainnya. Daftar gratis sekarang juga!
               </p>
               <div className="flex justify-center gap-4 flex-wrap">
                 <Link to="/signup">
-                  <Button size="lg" className="bg-white text-primary hover:bg-white/90 h-12 px-8 text-base font-semibold rounded-xl shadow-lg transition-all duration-300">
+                  <Button size="lg" className="bg-white text-primary hover:bg-white/90 h-12 px-8 text-base font-bold rounded-xl shadow-lg transition-all duration-300">
                     Daftar Gratis
                     <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
                 <Link to="/signin">
-                  <Button size="lg" variant="outline" className="h-12 px-8 text-base font-semibold rounded-xl border-white/30 text-white hover:bg-white/10 hover:text-white transition-all duration-300">
+                  <Button size="lg" variant="outline" className="bg-transparent h-12 px-8 text-base font-semibold rounded-xl border-white/40 text-white hover:bg-white/10 transition-all duration-300">
                     Saya Sudah Punya Akun
                   </Button>
                 </Link>
@@ -314,13 +314,24 @@ export default function LandingPage() {
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-4 text-accent">Akses Cepat</h4>
-              <ul className="space-y-2 text-white/60 text-sm">
-                <li><Link to="/signin" className="hover:text-accent transition-colors">Masuk</Link></li>
-                <li><Link to="/signup" className="hover:text-accent transition-colors">Daftar</Link></li>
-                <li><Link to="/manager" className="hover:text-accent transition-colors">Manager</Link></li>
-                <li><Link to="/owner" className="hover:text-accent transition-colors">Owner</Link></li>
-              </ul>
+              <h4 className="font-semibold mb-4 text-accent">Sosial Media</h4>
+              <div className="flex items-center gap-4">
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-[#0d3d33] transition-colors" title="Facebook">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z" />
+                  </svg>
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-[#0d3d33] transition-colors" title="Instagram">
+                  <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                  </svg>
+                </a>
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-[#0d3d33] transition-colors" title="TikTok">
+                  <svg viewBox="0 0 448 512" fill="currentColor" className="w-5 h-5">
+                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/>
+                  </svg>
+                </a>
+              </div>
             </div>
           </div>
           <div className="border-t border-white/10 pt-6 text-center">

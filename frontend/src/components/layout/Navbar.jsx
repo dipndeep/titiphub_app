@@ -21,29 +21,32 @@ export default function Navbar() {
     if (location.pathname.startsWith("/manager")) {
       return [
         { path: "/manager", label: "Dashboard" },
-        { path: "/", label: "Beranda" },
-        { path: "/signin", label: "Logout" },
+        { path: "/", label: "Logout" },
       ]
     }
     if (location.pathname.startsWith("/owner")) {
       return [
         { path: "/owner", label: "Dashboard" },
-        { path: "/", label: "Beranda" },
-        { path: "/signin", label: "Logout" },
+        { path: "/", label: "Logout" },
       ]
     }
-    if (isAuthPage) return []
-    return [
-      { path: "/", label: "Beranda" },
-      { path: "/order", label: "Titip Barang" },
-      { path: "/tracking", label: "Lacak Pesanan" },
-    ]
+    if (location.pathname === "/order" || location.pathname === "/tracking") {
+      return [
+        { path: "/order", label: "Titip Barang" },
+        { path: "/tracking", label: "Lacak Pesanan" },
+        { path: "/", label: "Logout" },
+      ]
+    }
+    return []
   }
 
   const links = getLinks()
+  const showAuthButtons = location.pathname === "/"
   const navBg = isLanding
     ? scrolled ? "glass-dark shadow-lg" : "bg-transparent"
     : "glass-dark shadow-lg"
+
+  if (isAuthPage) return null;
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${navBg}`}>
@@ -71,8 +74,8 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          {!isAuthPage && !location.pathname.startsWith("/manager") && !location.pathname.startsWith("/owner") && (
-            <div className="flex items-center gap-2 ml-4 border-l border-white/15 pl-4">
+          {showAuthButtons && (
+            <div className="flex items-center gap-2 ml-4">
               <Link to="/signin">
                 <Button size="sm" variant="ghost" className="text-white/80 hover:text-white hover:bg-white/10 rounded-lg h-9">
                   Masuk
@@ -113,7 +116,7 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          {!isAuthPage && !location.pathname.startsWith("/manager") && !location.pathname.startsWith("/owner") && (
+          {showAuthButtons && (
             <>
               <hr className="border-white/10 my-2" />
               <Link

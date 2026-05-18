@@ -1,9 +1,8 @@
 import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Package, Mail, Lock, Eye, EyeOff, User } from "lucide-react"
+import { Package, Mail, Lock, Eye, EyeOff, User, CheckCircle2 } from "lucide-react"
 
 export default function SignUp() {
   const navigate = useNavigate()
@@ -16,70 +15,120 @@ export default function SignUp() {
     navigate("/signin")
   }
 
+  const benefits = [
+    "Pemesanan praktis tanpa ribet",
+    "Pantau status secara real-time",
+    "Transparan dan terpercaya"
+  ]
+
   return (
-    <div className="min-h-screen gradient-hero flex items-center justify-center px-4 py-12 relative">
+    <div className="min-h-screen gradient-hero flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-accent/10 blur-3xl animate-float"></div>
         <div className="absolute -bottom-40 -right-40 w-[400px] h-[400px] rounded-full bg-secondary/10 blur-3xl animate-float animation-delay-300"></div>
       </div>
 
-      <div className="w-full max-w-md relative z-10 animate-scale-in">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm mb-4 border border-white/20 hover-lift">
-            <Package className="w-8 h-8 text-accent" />
-          </Link>
-          <h1 className="text-3xl font-bold text-white">Daftar di TitipHub</h1>
-          <p className="text-white/60 mt-1">Buat akun gratis Anda sekarang</p>
+      {/* Main Container - Adjusted max-w and height constraints */}
+      <div className="w-full max-w-[900px] bg-white rounded-3xl shadow-2xl relative z-10 flex flex-col md:flex-row overflow-hidden max-h-[90vh] md:max-h-[600px] animate-scale-in">
+        
+        {/* Left: Info Panel */}
+        <div className="w-full md:w-5/12 p-8 text-white flex flex-col justify-center bg-primary relative">
+          <div className="absolute inset-0 gradient-primary opacity-90"></div>
+          <div className="absolute top-0 right-0 w-48 h-48 bg-accent/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+          
+          <div className="relative z-10 flex flex-col h-full">
+            <Link to="/" className="inline-flex items-center gap-2 mb-8 hover:opacity-80 transition-opacity">
+              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm shadow-inner">
+                <Package className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-xl tracking-tight">TitipHub</span>
+            </Link>
+            
+            <div className="mt-auto mb-auto">
+              <h2 className="text-2xl md:text-3xl font-extrabold mb-3 leading-tight">
+                Mulai Perjalanan Jastip Anda.
+              </h2>
+              <p className="text-white/80 text-sm mb-6 leading-relaxed">
+                Bergabunglah dengan ribuan pengguna lainnya yang telah percaya kepada kami.
+              </p>
+              
+              <div className="space-y-3">
+                {benefits.map((text, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="bg-accent/20 p-1 rounded-full shrink-0">
+                      <CheckCircle2 className="w-4 h-4 text-accent" />
+                    </div>
+                    <span className="text-sm font-medium text-white/90">{text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur-xl">
-          <CardHeader className="space-y-1 pb-4">
-            <CardTitle className="text-xl text-center">Buat Akun Baru</CardTitle>
-            <CardDescription className="text-center">Isi data di bawah untuk mendaftar</CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium">Nama Lengkap</label>
+        {/* Right: Form Panel */}
+        <div className="w-full md:w-7/12 p-6 md:p-10 bg-white flex items-center justify-center overflow-y-auto">
+          <div className="w-full max-w-[360px]">
+            <div className="text-center md:text-left mb-6">
+              <h3 className="text-2xl font-bold text-gray-900">Buat Akun Baru</h3>
+              <p className="text-gray-500 mt-1 text-sm">Lengkapi data untuk mendaftar gratis.</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-1.5">
+                <label htmlFor="name" className="text-sm font-semibold text-gray-700">Nama Lengkap</label>
                 <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="name" type="text" placeholder="Masukkan nama lengkap" className="pl-10 h-11 rounded-xl border-border/60" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                  <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input id="name" type="text" placeholder="Masukkan nama" className="pl-9 h-10 rounded-lg bg-gray-50 border-gray-200 focus:border-primary focus:bg-white focus:ring-primary/20 transition-all text-sm" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                 </div>
               </div>
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">Email</label>
+
+              <div className="space-y-1.5">
+                <label htmlFor="email" className="text-sm font-semibold text-gray-700">Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="email" type="email" placeholder="nama@email.com" className="pl-10 h-11 rounded-xl border-border/60" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input id="email" type="email" placeholder="nama@email.com" className="pl-9 h-10 rounded-lg bg-gray-50 border-gray-200 focus:border-primary focus:bg-white focus:ring-primary/20 transition-all text-sm" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
                 </div>
               </div>
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium">Kata Sandi</label>
+
+              <div className="space-y-1.5">
+                <label htmlFor="password" className="text-sm font-semibold text-gray-700">Kata Sandi</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="password" type={showPassword ? "text" : "password"} placeholder="Min. 6 karakter" className="pl-10 pr-10 h-11 rounded-xl border-border/60" required minLength={6} value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
-                  <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors" onClick={() => setShowPassword(!showPassword)}>
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input id="password" type={showPassword ? "text" : "password"} placeholder="Min. 6 karakter" className="pl-9 pr-9 h-10 rounded-lg bg-gray-50 border-gray-200 focus:border-primary focus:bg-white focus:ring-primary/20 transition-all text-sm" required minLength={6} value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                  <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors" onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
                 </div>
               </div>
-              <div className="space-y-2">
-                <label htmlFor="confirmPassword" className="text-sm font-medium">Konfirmasi Kata Sandi</label>
+
+              <div className="space-y-1.5">
+                <label htmlFor="confirmPassword" className="text-sm font-semibold text-gray-700">Konfirmasi Sandi</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="confirmPassword" type="password" placeholder="Ulangi kata sandi" className="pl-10 h-11 rounded-xl border-border/60" required minLength={6} value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input id="confirmPassword" type="password" placeholder="Ulangi sandi" className="pl-9 h-10 rounded-lg bg-gray-50 border-gray-200 focus:border-primary focus:bg-white focus:ring-primary/20 transition-all text-sm" required minLength={6} value={formData.confirmPassword} onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })} />
                 </div>
               </div>
-            </CardContent>
-            <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full h-11 text-base rounded-xl font-semibold shadow-lg shadow-primary/20">Daftar Sekarang</Button>
-              <p className="text-sm text-muted-foreground text-center">
+              
+              <div className="pt-2">
+                <Button type="submit" className="w-full h-11 text-base rounded-lg font-bold bg-primary hover:bg-primary/90 text-white shadow-md shadow-primary/20 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                  Daftar
+                </Button>
+              </div>
+            </form>
+            
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-500">
                 Sudah punya akun?{" "}
-                <Link to="/signin" className="text-secondary font-semibold hover:underline transition-colors">Masuk di sini</Link>
+                <Link to="/signin" className="text-primary font-bold hover:underline transition-colors">
+                  Masuk
+                </Link>
               </p>
-            </CardFooter>
-          </form>
-        </Card>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   )
