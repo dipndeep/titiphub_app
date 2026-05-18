@@ -1,13 +1,13 @@
 import React from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Users, ShoppingBag, CheckCircle, TrendingUp, ArrowUpRight, Activity } from "lucide-react"
+import { Users, ShoppingBag, CheckCircle, TrendingUp, ArrowUpRight, Activity, Clock } from "lucide-react"
 
 export default function Dashboard() {
   const stats = [
-    { label: "Total Pesanan", value: "156", icon: <ShoppingBag className="w-5 h-5 text-white" />, color: "bg-primary", change: "+12.5%", isUp: true },
-    { label: "Pesanan Selesai", value: "142", icon: <CheckCircle className="w-5 h-5 text-white" />, color: "bg-accent text-accent-foreground", change: "+15.2%", isUp: true },
-    { label: "Total Pengguna", value: "84", icon: <Users className="w-5 h-5 text-white" />, color: "bg-secondary", change: "+4.1%", isUp: true },
+    { label: "Total Kiriman", value: "156", icon: <ShoppingBag className="w-5 h-5 text-white" />, color: "bg-primary", change: "+12.5%", isUp: true },
+    { label: "Completed", value: "142", icon: <CheckCircle className="w-5 h-5 text-white" />, color: "bg-accent text-accent-foreground", change: "+15.2%", isUp: true },
+    { label: "Total Pelanggan", value: "84", icon: <Users className="w-5 h-5 text-white" />, color: "bg-secondary", change: "+4.1%", isUp: true },
     { label: "Pendapatan Kotor", value: "Rp 5.240.000", icon: <TrendingUp className="w-5 h-5 text-white" />, color: "bg-blue-500", change: "+8.4%", isUp: true },
   ]
 
@@ -71,19 +71,19 @@ export default function Dashboard() {
                 </thead>
                 <tbody className="divide-y divide-border/40">
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-gray-800">ORD-001</td>
+                    <td className="px-6 py-4 font-semibold text-gray-800">TH-2026-0001</td>
                     <td className="px-6 py-4 text-gray-600">Budi Santoso</td>
                     <td className="px-6 py-4 text-gray-600">Sepatu Nike Air Max</td>
                     <td className="px-6 py-4 text-right">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">Diproses</span>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">On-going</span>
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 font-semibold text-gray-800">ORD-002</td>
+                    <td className="px-6 py-4 font-semibold text-gray-800">TH-2026-0002</td>
                     <td className="px-6 py-4 text-gray-600">Siti Rahayu</td>
-                    <td className="px-6 py-4 text-gray-600">Kopi Kenangan 3 Cup</td>
+                    <td className="px-6 py-4 text-gray-600">Kopi Kenangan 3 Pack</td>
                     <td className="px-6 py-4 text-right">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Selesai</span>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Completed</span>
                     </td>
                   </tr>
                   <tr className="hover:bg-gray-50/50 transition-colors">
@@ -104,7 +104,7 @@ export default function Dashboard() {
             <CardHeader className="border-b border-border/40 bg-gray-50/50 py-4">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Users className="w-5 h-5 text-primary" />
-                Aktivitas Manager
+                Aktivitas Admin
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -112,16 +112,16 @@ export default function Dashboard() {
                  <div className="p-5 flex items-start gap-4 hover:bg-gray-50/50 transition-colors">
                    <div className="w-10 h-10 rounded-xl bg-secondary/15 flex items-center justify-center text-secondary font-bold shrink-0">A</div>
                    <div>
-                     <p className="text-sm font-bold text-gray-800 mb-0.5">Andi (Manager 1)</p>
-                     <p className="text-sm text-gray-600 mb-1">Menyelesaikan pesanan <span className="font-semibold text-primary">ORD-002</span></p>
+                     <p className="text-sm font-bold text-gray-800 mb-0.5">Andi (Admin 1)</p>
+                     <p className="text-sm text-gray-600 mb-1">Menerbitkan resi <span className="font-semibold text-primary">TH-2026-0002</span> dan update status ke <span className="font-semibold">Completed</span></p>
                      <p className="text-xs text-muted-foreground flex items-center gap-1"><Clock className="w-3 h-3" /> 2 jam lalu</p>
                    </div>
                  </div>
                  <div className="p-5 flex items-start gap-4 hover:bg-gray-50/50 transition-colors">
                    <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center text-primary font-bold shrink-0">R</div>
                    <div>
-                     <p className="text-sm font-bold text-gray-800 mb-0.5">Rina (Manager 2)</p>
-                     <p className="text-sm text-gray-600 mb-1">Menerima pesanan baru <span className="font-semibold text-primary">ORD-003</span></p>
+                     <p className="text-sm font-bold text-gray-800 mb-0.5">Rina (Admin 2)</p>
+                     <p className="text-sm text-gray-600 mb-1">Menerima kiriman baru dari <span className="font-semibold text-primary">Agus Pratama</span>, menerbitkan resi TitipHub</p>
                      <p className="text-xs text-muted-foreground flex items-center gap-1"><Clock className="w-3 h-3" /> 5 jam lalu</p>
                    </div>
                  </div>
