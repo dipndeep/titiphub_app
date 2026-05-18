@@ -1,9 +1,12 @@
 import React from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Package, Clock, Loader2, CheckCircle2, Search, Plane, Ship, Zap, Copy } from "lucide-react"
+import { Package, Clock, Loader2, CheckCircle2, Search, Plane, Ship, Zap, Copy, Scale, Banknote } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+
+function formatRupiah(num) {
+  return "Rp " + num.toLocaleString("id-ID")
+}
 
 export default function Tracking() {
   const orders = [
@@ -15,6 +18,8 @@ export default function Tracking() {
       kecepatan: "Express",
       status: "On-going",
       resiTitiphub: "TH-2026-0001",
+      beratKg: 1.2,
+      ongkir: 120000,
       date: "18 Mei 2026",
     },
     {
@@ -25,6 +30,8 @@ export default function Tracking() {
       kecepatan: "Reguler",
       status: "Completed",
       resiTitiphub: "TH-2026-0002",
+      beratKg: 2.5,
+      ongkir: 200000,
       date: "15 Mei 2026",
     },
     {
@@ -34,7 +41,9 @@ export default function Tracking() {
       tipePengiriman: "Udara",
       kecepatan: "Reguler",
       status: "Pending",
-      resiTitiphub: null, // Belum diberikan admin
+      resiTitiphub: null,
+      beratKg: null,
+      ongkir: null,
       date: "18 Mei 2026",
     },
   ]
@@ -45,7 +54,7 @@ export default function Tracking() {
       color: "bg-amber-100 text-amber-700",
       barColor: "bg-amber-400",
       label: "Menunggu Diproses",
-      description: "Barang terdaftar, menunggu Admin memproses.",
+      description: "Barang terdaftar, menunggu Admin menimbang dan menerbitkan resi TitipHub.",
     },
     "On-going": {
       icon: <Loader2 className="w-5 h-5" />,
@@ -59,7 +68,7 @@ export default function Tracking() {
       color: "bg-green-100 text-green-700",
       barColor: "bg-accent",
       label: "Tiba — Siap Diambil",
-      description: "Barang telah tiba di TitipHub dan siap diambil!",
+      description: "Barang telah tiba di TitipHub dan siap diambil! Silakan siapkan ongkir saat pengambilan.",
     },
   }
 
@@ -109,7 +118,7 @@ export default function Tracking() {
                     </div>
 
                     {/* Info Grid */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5 bg-gray-50 rounded-xl p-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-5 bg-gray-50 rounded-xl p-4">
                       <div>
                         <p className="text-[11px] uppercase font-semibold text-muted-foreground mb-0.5">Resi Asal</p>
                         <p className="text-sm font-medium truncate" title={order.resiAsal}>{order.resiAsal}</p>
@@ -141,7 +150,39 @@ export default function Tracking() {
                           <span className="text-sm font-medium">{order.kecepatan}</span>
                         </div>
                       </div>
+                      <div>
+                        <p className="text-[11px] uppercase font-semibold text-muted-foreground mb-0.5">Berat Paket</p>
+                        {order.beratKg !== null ? (
+                          <div className="flex items-center gap-1.5">
+                            <Scale className="w-3.5 h-3.5 text-muted-foreground" />
+                            <span className="text-sm font-semibold">{order.beratKg} kg</span>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-muted-foreground italic">Belum ditimbang</p>
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-[11px] uppercase font-semibold text-muted-foreground mb-0.5">Ongkir</p>
+                        {order.ongkir !== null ? (
+                          <div className="flex items-center gap-1.5">
+                            <Banknote className="w-3.5 h-3.5 text-primary" />
+                            <span className="text-sm font-bold text-primary">{formatRupiah(order.ongkir)}</span>
+                          </div>
+                        ) : (
+                          <p className="text-sm text-muted-foreground italic">—</p>
+                        )}
+                      </div>
                     </div>
+
+                    {/* Ongkir notice for completed */}
+                    {order.status === "Completed" && order.ongkir !== null && (
+                      <div className="mb-4 p-3 bg-accent/10 border border-accent/20 rounded-lg flex items-center gap-3">
+                        <Banknote className="w-5 h-5 text-primary shrink-0" />
+                        <p className="text-sm">
+                          Siapkan biaya ongkir sebesar <span className="font-bold text-primary">{formatRupiah(order.ongkir)}</span> saat pengambilan barang di TitipHub.
+                        </p>
+                      </div>
+                    )}
 
                     {/* Status description */}
                     <p className="text-sm text-muted-foreground mb-4">{config.description}</p>

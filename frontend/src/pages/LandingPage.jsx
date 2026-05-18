@@ -92,7 +92,7 @@ export default function LandingPage() {
                   <p className="text-sm text-white/60">Tingkat Kepuasan</p>
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-accent">24jam</p>
+                  <p className="text-3xl font-bold text-accent">24 Jam</p>
                   <p className="text-sm text-white/60">Rata-rata Proses</p>
                 </div>
               </div>

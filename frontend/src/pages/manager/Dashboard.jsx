@@ -3,26 +3,53 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Package, Clock, Loader2, CheckCircle2, XCircle, Search, Filter, Plane, Ship, Zap, Ticket } from "lucide-react"
+import { Package, Clock, Loader2, CheckCircle2, Search, Filter, Plane, Ship, Zap, Ticket, Scale } from "lucide-react"
+
+// Tarif ongkir per kg
+const TARIF = {
+  "Udara-Reguler": 85000,
+  "Udara-Express": 100000,
+  "Laut-Reguler": 80000,
+  "Laut-Express": 95000,
+}
+
+function hitungOngkir(tipePengiriman, kecepatan, beratKg) {
+  const key = `${tipePengiriman}-${kecepatan}`
+  const tarif = TARIF[key] || 0
+  return tarif * beratKg
+}
+
+function formatRupiah(num) {
+  return "Rp " + num.toLocaleString("id-ID")
+}
 
 export default function Dashboard() {
   const [orders, setOrders] = useState([
-    { id: "ORD-001", customer: "Budi Santoso", itemName: "Sepatu Nike Air Max", resiAsal: "JNE-123456789", tipePengiriman: "Udara", kecepatan: "Express", status: "Pending", resiTitiphub: null, date: "18 Mei 2026" },
-    { id: "ORD-002", customer: "Siti Rahayu", itemName: "Kopi Kenangan 3 Pack", resiAsal: "SICEPAT-987654321", tipePengiriman: "Laut", kecepatan: "Reguler", status: "On-going", resiTitiphub: "TH-2026-0002", date: "17 Mei 2026" },
-    { id: "ORD-003", customer: "Agus Pratama", itemName: "Buku Tere Liye - Bumi", resiAsal: "JNT-112233445", tipePengiriman: "Udara", kecepatan: "Reguler", status: "On-going", resiTitiphub: "TH-2026-0003", date: "16 Mei 2026" },
-    { id: "ORD-004", customer: "Rina Melati", itemName: "Skincare Somethinc", resiAsal: "ANTERAJA-556677", tipePengiriman: "Laut", kecepatan: "Express", status: "Completed", resiTitiphub: "TH-2026-0004", date: "15 Mei 2026" },
+    { id: "ORD-001", customer: "Budi Santoso", itemName: "Sepatu Nike Air Max", resiAsal: "JNE-123456789", tipePengiriman: "Udara", kecepatan: "Express", status: "Pending", resiTitiphub: null, beratKg: null, ongkir: null, date: "18 Mei 2026" },
+    { id: "ORD-002", customer: "Siti Rahayu", itemName: "Kopi Kenangan 3 Pack", resiAsal: "SICEPAT-987654321", tipePengiriman: "Laut", kecepatan: "Reguler", status: "On-going", resiTitiphub: "TH-2026-0002", beratKg: 2.5, ongkir: 200000, date: "17 Mei 2026" },
+    { id: "ORD-003", customer: "Agus Pratama", itemName: "Buku Tere Liye - Bumi", resiAsal: "JNT-112233445", tipePengiriman: "Udara", kecepatan: "Reguler", status: "On-going", resiTitiphub: "TH-2026-0003", beratKg: 1, ongkir: 85000, date: "16 Mei 2026" },
+    { id: "ORD-004", customer: "Rina Melati", itemName: "Skincare Somethinc", resiAsal: "ANTERAJA-556677", tipePengiriman: "Laut", kecepatan: "Express", status: "Completed", resiTitiphub: "TH-2026-0004", beratKg: 0.5, ongkir: 47500, date: "15 Mei 2026" },
   ])
 
   const [resiInput, setResiInput] = useState({})
+  const [beratInput, setBeratInput] = useState({})
 
   const terimaAndBeriResi = (id) => {
     const resi = resiInput[id]
+    const berat = parseFloat(beratInput[id])
     if (!resi || resi.trim() === "") {
       alert("Masukkan resi TitipHub terlebih dahulu!")
       return
     }
-    setOrders(orders.map(order =>
-      order.id === id ? { ...order, status: "On-going", resiTitiphub: resi } : order
+    if (!berat || berat <= 0) {
+      alert("Masukkan berat paket yang valid (dalam kg)!")
+      return
+    }
+    const order = orders.find(o => o.id === id)
+    const ongkir = hitungOngkir(order.tipePengiriman, order.kecepatan, berat)
+
+    setOrders(orders.map(o =>
+      o.id === id ? { ...o, status: "On-going", resiTitiphub: resi, beratKg: berat, ongkir: ongkir } : o
     ))
   }
 
@@ -43,13 +70,20 @@ export default function Dashboard() {
     { label: "Total Pesanan", value: orders.length, icon: <Package className="w-5 h-5 text-primary" />, color: "bg-primary/10" },
   ]
 
+  // Preview ongkir for pending orders
+  const getPreviewOngkir = (order) => {
+    const berat = parseFloat(beratInput[order.id])
+    if (!berat || berat <= 0) return null
+    return hitungOngkir(order.tipePengiriman, order.kecepatan, berat)
+  }
+
   return (
     <div className="pt-24 pb-16 px-4">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 animate-fade-in-up">
           <div>
             <h1 className="text-3xl font-bold mb-2">Admin <span className="gradient-text">Dashboard</span></h1>
-            <p className="text-muted-foreground">Kelola kiriman pelanggan, terbitkan resi, dan perbarui status pengiriman.</p>
+            <p className="text-muted-foreground">Kelola kiriman pelanggan, timbang paket, terbitkan resi, dan perbarui status.</p>
           </div>
           <div className="flex items-center gap-3">
             <div className="relative">
@@ -59,6 +93,29 @@ export default function Dashboard() {
             <Button variant="outline" size="icon" className="rounded-lg h-10 w-10 border-border/60">
               <Filter className="w-4 h-4" />
             </Button>
+          </div>
+        </div>
+
+        {/* Tarif Info */}
+        <div className="mb-6 p-4 bg-primary/5 border border-primary/15 rounded-xl animate-fade-in-up animation-delay-100">
+          <p className="text-sm font-semibold text-primary mb-2 flex items-center gap-2"><Scale className="w-4 h-4" /> Tarif Ongkir per Kilogram</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+            <div className="bg-white px-3 py-2 rounded-lg border border-border/40 text-center">
+              <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mb-1"><Plane className="w-3 h-3" /> Udara Reguler</div>
+              <p className="font-bold text-primary">Rp 85.000</p>
+            </div>
+            <div className="bg-white px-3 py-2 rounded-lg border border-border/40 text-center">
+              <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mb-1"><Plane className="w-3 h-3" /><Zap className="w-3 h-3" /> Udara Express</div>
+              <p className="font-bold text-primary">Rp 100.000</p>
+            </div>
+            <div className="bg-white px-3 py-2 rounded-lg border border-border/40 text-center">
+              <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mb-1"><Ship className="w-3 h-3" /> Laut Reguler</div>
+              <p className="font-bold text-primary">Rp 80.000</p>
+            </div>
+            <div className="bg-white px-3 py-2 rounded-lg border border-border/40 text-center">
+              <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mb-1"><Ship className="w-3 h-3" /><Zap className="w-3 h-3" /> Laut Express</div>
+              <p className="font-bold text-primary">Rp 95.000</p>
+            </div>
           </div>
         </div>
 
@@ -91,30 +148,32 @@ export default function Dashboard() {
             <table className="w-full text-sm text-left">
               <thead className="text-xs text-muted-foreground uppercase bg-gray-50/80">
                 <tr>
-                  <th className="px-5 py-4 font-semibold">Pelanggan</th>
-                  <th className="px-5 py-4 font-semibold">Barang</th>
-                  <th className="px-5 py-4 font-semibold">Resi Asal</th>
-                  <th className="px-5 py-4 font-semibold">Jalur / Kecepatan</th>
-                  <th className="px-5 py-4 font-semibold">Resi TitipHub</th>
-                  <th className="px-5 py-4 font-semibold">Status</th>
-                  <th className="px-5 py-4 font-semibold text-right">Aksi</th>
+                  <th className="px-4 py-4 font-semibold">Pelanggan</th>
+                  <th className="px-4 py-4 font-semibold">Barang</th>
+                  <th className="px-4 py-4 font-semibold">Resi Asal</th>
+                  <th className="px-4 py-4 font-semibold">Jalur / Kecepatan</th>
+                  <th className="px-4 py-4 font-semibold">Berat / Ongkir</th>
+                  <th className="px-4 py-4 font-semibold">Resi TitipHub</th>
+                  <th className="px-4 py-4 font-semibold">Status</th>
+                  <th className="px-4 py-4 font-semibold text-right">Aksi</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/40">
                 {orders.map((order) => {
                   const config = statusConfig[order.status]
+                  const previewOngkir = order.status === "Pending" ? getPreviewOngkir(order) : null
                   return (
                     <tr key={order.id} className="hover:bg-gray-50/50 transition-colors group">
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-4">
                         <p className="font-medium">{order.customer}</p>
                         <p className="text-xs text-muted-foreground">{order.date}</p>
                       </td>
-                      <td className="px-5 py-4 max-w-[160px] truncate font-medium" title={order.itemName}>{order.itemName}</td>
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-4 max-w-[140px] truncate font-medium" title={order.itemName}>{order.itemName}</td>
+                      <td className="px-4 py-4">
                         <code className="text-xs bg-gray-100 px-2 py-1 rounded font-mono">{order.resiAsal}</code>
                       </td>
-                      <td className="px-5 py-4">
-                        <div className="flex items-center gap-2 flex-wrap">
+                      <td className="px-4 py-4">
+                        <div className="flex items-center gap-1.5 flex-wrap">
                           <span className="inline-flex items-center gap-1 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">
                             {order.tipePengiriman === "Udara" ? <Plane className="w-3 h-3" /> : <Ship className="w-3 h-3" />}
                             {order.tipePengiriman}
@@ -125,31 +184,64 @@ export default function Dashboard() {
                           </span>
                         </div>
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-4">
+                        {order.beratKg !== null ? (
+                          <div>
+                            <p className="text-sm font-semibold flex items-center gap-1"><Scale className="w-3.5 h-3.5 text-muted-foreground" /> {order.beratKg} kg</p>
+                            <p className="text-xs font-bold text-primary">{formatRupiah(order.ongkir)}</p>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-muted-foreground italic">Belum ditimbang</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-4">
                         {order.resiTitiphub ? (
                           <code className="text-xs bg-primary/10 text-primary px-2 py-1 rounded font-mono font-bold">{order.resiTitiphub}</code>
                         ) : (
                           <span className="text-xs text-muted-foreground italic">Belum diterbitkan</span>
                         )}
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-4">
                         <Badge className={`${config.color} border-0 px-2.5 py-0.5 rounded-md font-semibold`}>
                           {config.label}
                         </Badge>
                       </td>
-                      <td className="px-5 py-4">
+                      <td className="px-4 py-4">
                         <div className="flex flex-col items-end gap-2">
                           {order.status === "Pending" && (
-                            <div className="flex items-center gap-2">
-                              <Input
-                                placeholder="Resi TitipHub..."
-                                className="h-8 w-[140px] text-xs rounded-md border-border/60"
-                                value={resiInput[order.id] || ""}
-                                onChange={(e) => setResiInput({ ...resiInput, [order.id]: e.target.value })}
-                              />
-                              <Button size="sm" className="h-8 bg-primary hover:bg-primary/90 shadow-sm gap-1" onClick={() => terimaAndBeriResi(order.id)}>
-                                <Ticket className="w-3.5 h-3.5" /> Terbitkan
-                              </Button>
+                            <div className="flex flex-col items-end gap-2">
+                              {/* Berat input + auto ongkir */}
+                              <div className="flex items-center gap-2">
+                                <div className="relative">
+                                  <Scale className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                                  <Input
+                                    type="number"
+                                    step="0.1"
+                                    min="0.1"
+                                    placeholder="Berat (kg)"
+                                    className="h-8 w-[140px] text-xs rounded-md border-border/60 pl-8"
+                                    value={beratInput[order.id] || ""}
+                                    onChange={(e) => setBeratInput({ ...beratInput, [order.id]: e.target.value })}
+                                  />
+                                </div>
+                              </div>
+                              {previewOngkir !== null && (
+                                <p className="text-xs text-right">
+                                  Ongkir: <span className="font-bold text-primary">{formatRupiah(previewOngkir)}</span>
+                                </p>
+                              )}
+                              {/* Resi input */}
+                              <div className="flex items-center gap-2">
+                                <Input
+                                  placeholder="Resi TitipHub..."
+                                  className="h-8 w-[120px] text-xs rounded-md border-border/60"
+                                  value={resiInput[order.id] || ""}
+                                  onChange={(e) => setResiInput({ ...resiInput, [order.id]: e.target.value })}
+                                />
+                                <Button size="sm" className="h-8 bg-primary hover:bg-primary/90 shadow-sm gap-1 text-xs" onClick={() => terimaAndBeriResi(order.id)}>
+                                  <Ticket className="w-3.5 h-3.5" /> Terbitkan
+                                </Button>
+                              </div>
                             </div>
                           )}
                           {order.status === "On-going" && (
