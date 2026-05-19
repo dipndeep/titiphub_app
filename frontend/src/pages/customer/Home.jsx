@@ -13,32 +13,27 @@ export default function Home() {
     tipePengiriman: "",
     kecepatanPengiriman: "",
   })
-  const [submitted, setSubmitted] = useState(false)
+  const [showConfirmModal, setShowConfirmModal] = useState(false)
+  const [showSuccessModal, setShowSuccessModal] = useState(false)
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    setSubmitted(true)
-    // Simulasi notifikasi berhasil, lalu redirect
-    setTimeout(() => navigate("/tracking"), 2000)
+    setShowConfirmModal(true)
   }
 
-  if (submitted) {
-    return (
-      <div className="pt-24 pb-16 px-4">
-        <div className="max-w-md mx-auto text-center animate-scale-in">
-          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/15 mb-6">
-            <CheckCircle2 className="w-10 h-10 text-accent" />
-          </div>
-          <h2 className="text-2xl font-bold mb-3">Data Barang Berhasil Diinput!</h2>
-          <p className="text-muted-foreground mb-2">
-            Barang <span className="font-semibold text-foreground">"{formData.itemName}"</span> telah berhasil didaftarkan ke sistem TitipHub.
-          </p>
-          <p className="text-sm text-muted-foreground">
-            Anda akan menerima resi TitipHub setelah Admin memproses kiriman Anda. Mengarahkan ke halaman tracking...
-          </p>
-        </div>
-      </div>
-    )
+  const handleConfirmSubmit = () => {
+    setShowConfirmModal(false)
+    setShowSuccessModal(true)
+  }
+
+  const handleInputLagi = () => {
+    setShowSuccessModal(false)
+    setFormData({
+      itemName: "",
+      resiAsal: "",
+      tipePengiriman: "",
+      kecepatanPengiriman: "",
+    })
   }
 
   return (
@@ -59,7 +54,7 @@ export default function Home() {
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <form onSubmit={handleSubmit} autoComplete="off" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           
           {/* Kolom Kiri: Info Barang & Opsi Pengiriman */}
           <div className="lg:col-span-2 flex flex-col gap-6">
@@ -75,14 +70,14 @@ export default function Home() {
                   <label htmlFor="itemName" className="text-sm font-semibold flex items-center gap-2 text-gray-700">
                     Nama Barang
                   </label>
-                  <Input id="itemName" placeholder="Contoh: Sepatu Nike Air Max" className="h-12 rounded-xl border-border/60 focus:border-primary bg-gray-50/50" required value={formData.itemName} onChange={(e) => setFormData({ ...formData, itemName: e.target.value })} />
+                  <Input id="itemName" name="itemName" autoComplete="off" placeholder="Contoh: Sepatu Nike Air Max" className="h-12 rounded-xl border-border/60 focus:border-primary bg-gray-50/50" required value={formData.itemName} onChange={(e) => setFormData({ ...formData, itemName: e.target.value })} />
                 </div>
 
                 <div className="space-y-2">
                   <label htmlFor="resiAsal" className="text-sm font-semibold flex items-center gap-2 text-gray-700">
                     Nomor Resi Pengiriman Asal
                   </label>
-                  <Input id="resiAsal" placeholder="Resi ekspedisi asal..." className="h-12 rounded-xl border-border/60 focus:border-primary bg-gray-50/50" required value={formData.resiAsal} onChange={(e) => setFormData({ ...formData, resiAsal: e.target.value })} />
+                  <Input id="resiAsal" name="resiAsal" autoComplete="off" placeholder="Resi ekspedisi asal..." className="h-12 rounded-xl border-border/60 focus:border-primary bg-gray-50/50" required value={formData.resiAsal} onChange={(e) => setFormData({ ...formData, resiAsal: e.target.value })} />
                   <p className="text-xs text-muted-foreground">Resi dari jasa ekspedisi yang Anda gunakan untuk mengirim barang ke TitipHub.</p>
                 </div>
               </div>
@@ -231,13 +226,98 @@ export default function Home() {
                 className="w-full h-[72px] text-lg rounded-[2rem] font-bold shadow-lg shadow-primary/20 gap-3 disabled:opacity-50 transition-transform hover:-translate-y-1"
               >
                 <Send className="w-6 h-6" />
-                Kirim Data
+                Kirim Data Barang
               </Button>
             </div>
             
           </div>
         </form>
       </div>
+
+      {/* Modal Sukses */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-[2rem] p-6 md:p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/15 mb-6">
+              <CheckCircle2 className="w-10 h-10 text-accent" />
+            </div>
+            <h2 className="text-2xl font-bold mb-3 text-gray-900">Proses Berhasil!</h2>
+            <p className="text-muted-foreground mb-6 text-sm">
+              Barang <span className="font-semibold text-foreground">"{formData.itemName}"</span> telah berhasil didaftarkan. Anda akan mendapatkan resi TitipHub setelah Admin memproses paket Anda.
+            </p>
+            
+            <div className="flex flex-col gap-3">
+              <Button 
+                type="button" 
+                className="w-full h-12 rounded-xl bg-accent text-white shadow-lg shadow-accent/20 hover:opacity-90 transition-opacity"
+                onClick={() => navigate("/tracking")}
+              >
+                Lacak Pesanan Saya
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="w-full h-12 rounded-xl border-border/60 hover:bg-gray-100 transition-colors"
+                onClick={handleInputLagi}
+              >
+                Input Barang Lain
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Konfirmasi */}
+      {showConfirmModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white rounded-[2rem] p-6 md:p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="flex flex-col items-center text-center mb-6">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                <FileText className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Konfirmasi Data Barang</h3>
+              <p className="text-sm text-muted-foreground">Pastikan detail barang dan opsi pengiriman Anda sudah benar sebelum dikirim.</p>
+            </div>
+            
+            <div className="bg-gray-50 p-4 rounded-2xl mb-6 space-y-3 text-sm">
+              <div className="flex justify-between pb-2 border-b border-border/40">
+                <span className="text-muted-foreground">Nama Barang:</span>
+                <span className="font-bold text-gray-900 text-right max-w-[150px] sm:max-w-[180px] truncate" title={formData.itemName}>{formData.itemName}</span>
+              </div>
+              <div className="flex justify-between pb-2 border-b border-border/40">
+                <span className="text-muted-foreground">No Resi Asal:</span>
+                <span className="font-bold text-gray-900 text-right">{formData.resiAsal}</span>
+              </div>
+              <div className="flex justify-between pb-2 border-b border-border/40">
+                <span className="text-muted-foreground">Jalur:</span>
+                <span className="font-bold text-primary capitalize">{formData.tipePengiriman}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Kecepatan:</span>
+                <span className="font-bold text-secondary capitalize">{formData.kecepatanPengiriman}</span>
+              </div>
+            </div>
+            
+            <div className="flex gap-3">
+              <Button 
+                type="button" 
+                variant="outline" 
+                className="flex-1 h-12 rounded-xl border-border/60 hover:bg-gray-100 transition-colors"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                Batal
+              </Button>
+              <Button 
+                type="button" 
+                className="flex-1 h-12 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity"
+                onClick={handleConfirmSubmit}
+              >
+                Kirim Sekarang
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
