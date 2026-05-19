@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Package, Mail, Lock, Eye, EyeOff } from "lucide-react"
+import { Package, Mail, Lock, Eye, EyeOff, Drone } from "lucide-react"
 
 export default function SignIn() {
   const navigate = useNavigate()
@@ -29,7 +29,7 @@ export default function SignIn() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-sm mb-4 border border-white/20 hover-lift">
-            <Package className="w-8 h-8 text-accent" />
+            <Drone className="w-8 h-8 text-accent" />
           </Link>
           <h1 className="text-3xl font-bold text-white">Masuk ke TitipHub</h1>
           <p className="text-white/60 mt-1">Selamat datang kembali!</p>

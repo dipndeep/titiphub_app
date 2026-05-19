@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
-import { Package, Menu, X } from "lucide-react"
+import { Package, Menu, X, Drone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function Navbar() {
@@ -54,7 +54,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 font-bold text-xl tracking-tight text-white">
           <div className="w-9 h-9 rounded-xl bg-accent/20 flex items-center justify-center">
-            <Package className="h-5 w-5 text-accent" />
+            <Drone className="h-5 w-5 text-accent" />
           </div>
           <span>TitipHub</span>
         </Link>

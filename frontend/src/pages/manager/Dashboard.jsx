@@ -3,27 +3,41 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Package, Clock, Loader2, CheckCircle2, Search, Filter, Plane, Ship, Zap, Ticket, Scale } from "lucide-react"
-
-// Tarif ongkir per kg
-const TARIF = {
-  "Udara-Reguler": 85000,
-  "Udara-Express": 100000,
-  "Laut-Reguler": 80000,
-  "Laut-Express": 95000,
-}
-
-function hitungOngkir(tipePengiriman, kecepatan, beratKg) {
-  const key = `${tipePengiriman}-${kecepatan}`
-  const tarif = TARIF[key] || 0
-  return tarif * beratKg
-}
+import { Package, Clock, Loader2, CheckCircle2, Search, Filter, Plane, Ship, Zap, Ticket, Scale, Pencil, X, Save } from "lucide-react"
 
 function formatRupiah(num) {
   return "Rp " + num.toLocaleString("id-ID")
 }
 
 export default function Dashboard() {
+  // Editable tariffs
+  const [tarif, setTarif] = useState({
+    "Udara-Reguler": 85000,
+    "Udara-Express": 100000,
+    "Laut-Reguler": 80000,
+    "Laut-Express": 95000,
+  })
+
+  // Modal state for editing tariffs
+  const [showTarifModal, setShowTarifModal] = useState(false)
+  const [editTarif, setEditTarif] = useState({ ...tarif })
+
+  const openTarifModal = () => {
+    setEditTarif({ ...tarif })
+    setShowTarifModal(true)
+  }
+
+  const saveTarif = () => {
+    setTarif({ ...editTarif })
+    setShowTarifModal(false)
+  }
+
+  function hitungOngkir(tipePengiriman, kecepatan, beratKg) {
+    const key = `${tipePengiriman}-${kecepatan}`
+    const rate = tarif[key] || 0
+    return rate * beratKg
+  }
+
   const [orders, setOrders] = useState([
     { id: "ORD-001", customer: "Budi Santoso", itemName: "Sepatu Nike Air Max", resiAsal: "JNE-123456789", tipePengiriman: "Udara", kecepatan: "Express", status: "Pending", resiTitiphub: null, beratKg: null, ongkir: null, date: "18 Mei 2026" },
     { id: "ORD-002", customer: "Siti Rahayu", itemName: "Kopi Kenangan 3 Pack", resiAsal: "SICEPAT-987654321", tipePengiriman: "Laut", kecepatan: "Reguler", status: "On-going", resiTitiphub: "TH-2026-0002", beratKg: 2.5, ongkir: 200000, date: "17 Mei 2026" },
@@ -77,6 +91,14 @@ export default function Dashboard() {
     return hitungOngkir(order.tipePengiriman, order.kecepatan, berat)
   }
 
+  // Tariff display config
+  const tarifItems = [
+    { key: "Udara-Reguler", label: "Udara Reguler", icon: <Plane className="w-3 h-3" />, iconExtra: null },
+    { key: "Udara-Express", label: "Udara Express", icon: <Plane className="w-3 h-3" />, iconExtra: <Zap className="w-3 h-3" /> },
+    { key: "Laut-Reguler", label: "Laut Reguler", icon: <Ship className="w-3 h-3" />, iconExtra: null },
+    { key: "Laut-Express", label: "Laut Express", icon: <Ship className="w-3 h-3" />, iconExtra: <Zap className="w-3 h-3" /> },
+  ]
+
   return (
     <div className="pt-24 pb-16 px-4">
       <div className="max-w-7xl mx-auto">
@@ -98,26 +120,78 @@ export default function Dashboard() {
 
         {/* Tarif Info */}
         <div className="mb-6 p-4 bg-primary/5 border border-primary/15 rounded-xl animate-fade-in-up animation-delay-100">
-          <p className="text-sm font-semibold text-primary mb-2 flex items-center gap-2"><Scale className="w-4 h-4" /> Tarif Ongkir per Kilogram</p>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-semibold text-primary flex items-center gap-2"><Scale className="w-4 h-4" /> Tarif Ongkir per Kilogram</p>
+            <Button variant="outline" size="sm" className="h-7 text-xs gap-1.5 border-primary/30 text-primary hover:bg-primary/10 hover:text-primary rounded-lg" onClick={openTarifModal}>
+              <Pencil className="w-3 h-3" /> Edit Tarif
+            </Button>
+          </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-            <div className="bg-white px-3 py-2 rounded-lg border border-border/40 text-center">
-              <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mb-1"><Plane className="w-3 h-3" /> Udara Reguler</div>
-              <p className="font-bold text-primary">Rp 85.000</p>
-            </div>
-            <div className="bg-white px-3 py-2 rounded-lg border border-border/40 text-center">
-              <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mb-1"><Plane className="w-3 h-3" /><Zap className="w-3 h-3" /> Udara Express</div>
-              <p className="font-bold text-primary">Rp 100.000</p>
-            </div>
-            <div className="bg-white px-3 py-2 rounded-lg border border-border/40 text-center">
-              <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mb-1"><Ship className="w-3 h-3" /> Laut Reguler</div>
-              <p className="font-bold text-primary">Rp 80.000</p>
-            </div>
-            <div className="bg-white px-3 py-2 rounded-lg border border-border/40 text-center">
-              <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mb-1"><Ship className="w-3 h-3" /><Zap className="w-3 h-3" /> Laut Express</div>
-              <p className="font-bold text-primary">Rp 95.000</p>
-            </div>
+            {tarifItems.map((item) => (
+              <div key={item.key} className="bg-white px-3 py-2 rounded-lg border border-border/40 text-center">
+                <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground mb-1">{item.icon}{item.iconExtra}{item.label}</div>
+                <p className="font-bold text-primary">{formatRupiah(tarif[item.key])}</p>
+              </div>
+            ))}
           </div>
         </div>
+
+        {/* Tarif Edit Modal */}
+        {showTarifModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center">
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowTarifModal(false)}></div>
+            {/* Modal */}
+            <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 animate-scale-in overflow-hidden">
+              {/* Header */}
+              <div className="flex items-center justify-between p-5 border-b border-border/40">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2"><Scale className="w-5 h-5 text-primary" /> Edit Tarif Ongkir</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">Ubah harga tarif per kilogram untuk setiap jalur pengiriman.</p>
+                </div>
+                <button onClick={() => setShowTarifModal(false)} className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors">
+                  <X className="w-5 h-5 text-gray-400" />
+                </button>
+              </div>
+              {/* Body */}
+              <div className="p-5 space-y-4">
+                {tarifItems.map((item) => (
+                  <div key={item.key} className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5 w-36 shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        {item.key.startsWith("Udara") ? <Plane className="w-4 h-4 text-primary" /> : <Ship className="w-4 h-4 text-primary" />}
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-gray-800">{item.label}</p>
+                        <p className="text-[10px] text-muted-foreground">per kilogram</p>
+                      </div>
+                    </div>
+                    <div className="flex-1 relative">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground font-semibold">Rp</span>
+                      <Input
+                        type="number"
+                        min="0"
+                        step="1000"
+                        className="pl-9 h-10 rounded-lg text-sm font-semibold border-border/60 focus:border-primary focus:ring-primary/20"
+                        value={editTarif[item.key]}
+                        onChange={(e) => setEditTarif({ ...editTarif, [item.key]: parseInt(e.target.value) || 0 })}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Footer */}
+              <div className="flex items-center justify-end gap-2 p-5 border-t border-border/40 bg-gray-50/50">
+                <Button variant="outline" size="sm" className="rounded-lg h-9 px-4" onClick={() => setShowTarifModal(false)}>
+                  Batal
+                </Button>
+                <Button size="sm" className="rounded-lg h-9 px-4 bg-primary hover:bg-primary/90 gap-1.5" onClick={saveTarif}>
+                  <Save className="w-3.5 h-3.5" /> Simpan Tarif
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">

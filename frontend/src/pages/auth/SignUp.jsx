@@ -2,12 +2,12 @@ import React, { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Package, Mail, Lock, Eye, EyeOff, User, CheckCircle2 } from "lucide-react"
+import { Package, Mail, Lock, Eye, EyeOff, User, CheckCircle2, Phone, Drone } from "lucide-react"
 
 export default function SignUp() {
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
-  const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "" })
+  const [formData, setFormData] = useState({ name: "", email: "", phone: "", password: "", confirmPassword: "" })
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -30,7 +30,7 @@ export default function SignUp() {
       </div>
 
       {/* Main Container - Adjusted max-w and height constraints */}
-      <div className="w-full max-w-[900px] bg-white rounded-3xl shadow-2xl relative z-10 flex flex-col md:flex-row overflow-hidden max-h-[90vh] md:max-h-[600px] animate-scale-in">
+      <div className="w-full max-w-[900px] bg-white rounded-3xl shadow-2xl relative z-10 flex flex-col md:flex-row overflow-hidden max-h-[95vh] md:max-h-[660px] animate-scale-in">
         
         {/* Left: Info Panel */}
         <div className="w-full md:w-5/12 p-8 text-white flex flex-col justify-center bg-primary relative">
@@ -40,7 +40,7 @@ export default function SignUp() {
           <div className="relative z-10 flex flex-col h-full">
             <Link to="/" className="inline-flex items-center gap-2 mb-8 hover:opacity-80 transition-opacity">
               <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm shadow-inner">
-                <Package className="w-5 h-5 text-white" />
+                <Drone className="w-5 h-5 text-white" />
               </div>
               <span className="font-bold text-xl tracking-tight">TitipHub</span>
             </Link>
@@ -68,19 +68,19 @@ export default function SignUp() {
         </div>
 
         {/* Right: Form Panel */}
-        <div className="w-full md:w-7/12 p-6 md:p-10 bg-white flex items-center justify-center overflow-y-auto">
+        <div className="w-full md:w-7/12 p-6 md:p-8 bg-white flex items-center justify-center overflow-y-auto">
           <div className="w-full max-w-[360px]">
-            <div className="text-center md:text-left mb-6">
+            <div className="text-center md:text-left mb-5">
               <h3 className="text-2xl font-bold text-gray-900">Buat Akun Baru</h3>
               <p className="text-gray-500 mt-1 text-sm">Lengkapi data untuk mendaftar gratis.</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-3.5">
               <div className="space-y-1.5">
                 <label htmlFor="name" className="text-sm font-semibold text-gray-700">Nama Lengkap</label>
                 <div className="relative">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-                  <Input id="name" type="text" placeholder="Masukkan nama" className="pl-9 h-10 rounded-lg bg-gray-50 border-gray-200 focus:border-primary focus:bg-white focus:ring-primary/20 transition-all text-sm" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
+                  <Input id="name" type="text" placeholder="Masukkan Nama" className="pl-9 h-10 rounded-lg bg-gray-50 border-gray-200 focus:border-primary focus:bg-white focus:ring-primary/20 transition-all text-sm" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
                 </div>
               </div>
 
@@ -89,6 +89,14 @@ export default function SignUp() {
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input id="email" type="email" placeholder="nama@email.com" className="pl-9 h-10 rounded-lg bg-gray-50 border-gray-200 focus:border-primary focus:bg-white focus:ring-primary/20 transition-all text-sm" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label htmlFor="phone" className="text-sm font-semibold text-gray-700">Nomor WhatsApp</label>
+                <div className="relative">
+                  <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Input id="phone" type="tel" placeholder="08xxxxxxxxxx" className="pl-9 h-10 rounded-lg bg-gray-50 border-gray-200 focus:border-primary focus:bg-white focus:ring-primary/20 transition-all text-sm" required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} />
                 </div>
               </div>
 
@@ -111,14 +119,14 @@ export default function SignUp() {
                 </div>
               </div>
               
-              <div className="pt-2">
+              <div className="pt-1">
                 <Button type="submit" className="w-full h-11 text-base rounded-lg font-bold bg-primary hover:bg-primary/90 text-white shadow-md shadow-primary/20 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                   Daftar
                 </Button>
               </div>
             </form>
             
-            <div className="mt-6 text-center">
+            <div className="mt-5 text-center">
               <p className="text-sm text-gray-500">
                 Sudah punya akun?{" "}
                 <Link to="/signin" className="text-primary font-bold hover:underline transition-colors">

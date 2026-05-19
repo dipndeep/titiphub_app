@@ -1,6 +1,6 @@
 import React from "react"
 import { Link } from "react-router-dom"
-import { Package, ArrowRight, ShieldCheck, Truck, Clock, Star, ChevronRight, Users, BarChart3 } from "lucide-react"
+import { Package, ArrowRight, ShieldCheck, Truck, Clock, Star, ChevronRight, Users, BarChart3, Plane, Ship, Banknote, CheckCircle2, Store, Drone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function LandingPage() {
@@ -98,64 +98,67 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Hero Visual */}
-            <div className="hidden lg:flex justify-center animate-fade-in-up animation-delay-300">
-              <div className="relative">
-                <div className="w-[420px] h-[420px] rounded-3xl gradient-primary opacity-20 blur-3xl absolute -inset-10"></div>
-                <div className="relative glass rounded-3xl p-8 shadow-2xl animate-pulse-glow">
-                  <div className="space-y-4">
-                    {/* Mock order card */}
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                          <Package className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-sm text-gray-800">Sepatu Nike Air Max</p>
-                          <p className="text-xs text-gray-500">ORD-2026-001</p>
-                        </div>
-                        <span className="ml-auto bg-accent/15 text-primary text-xs font-semibold px-3 py-1 rounded-full">Diproses</span>
-                      </div>
-                      <div className="flex gap-1">
-                        <div className="h-1.5 flex-1 rounded-full bg-primary"></div>
-                        <div className="h-1.5 flex-1 rounded-full bg-secondary"></div>
-                        <div className="h-1.5 flex-1 rounded-full bg-gray-200"></div>
-                        <div className="h-1.5 flex-1 rounded-full bg-gray-200"></div>
-                      </div>
-                    </div>
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 bg-accent/15 rounded-lg flex items-center justify-center">
-                          <ShieldCheck className="w-5 h-5 text-accent" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-sm text-gray-800">Kopi Kenangan</p>
-                          <p className="text-xs text-gray-500">ORD-2026-002</p>
-                        </div>
-                        <span className="ml-auto bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">Selesai ✓</span>
-                      </div>
-                      <div className="flex gap-1">
-                        <div className="h-1.5 flex-1 rounded-full bg-primary"></div>
-                        <div className="h-1.5 flex-1 rounded-full bg-secondary"></div>
-                        <div className="h-1.5 flex-1 rounded-full bg-accent"></div>
-                        <div className="h-1.5 flex-1 rounded-full bg-accent"></div>
-                      </div>
-                    </div>
-                    <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 opacity-70">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Clock className="w-5 h-5 text-gray-400" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-sm text-gray-800">Buku Tere Liye</p>
-                          <p className="text-xs text-gray-500">ORD-2026-003</p>
-                        </div>
-                        <span className="ml-auto bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full">Menunggu</span>
-                      </div>
-                    </div>
+            {/* Hero Visual (Floating UI Elements - Compact) */}
+            <div className="hidden lg:flex justify-center items-center relative w-full h-[400px] animate-fade-in-up animation-delay-300">
+              {/* Center Glow */}
+              <div className="absolute w-[240px] h-[240px] rounded-full bg-accent/20 blur-[60px] animate-pulse-glow"></div>
+              <div className="absolute w-[160px] h-[160px] rounded-full bg-primary/20 blur-[40px] animate-pulse-glow animation-delay-300"></div>
+
+              {/* Center Core Element */}
+              <div className="relative z-10 w-24 h-24 glass rounded-full flex items-center justify-center border-4 border-white/20 shadow-2xl animate-float">
+                <Store className="w-10 h-10 text-primary drop-shadow-lg" />
+              </div>
+
+              {/* Floating Element 1: Udara Express (Top Right) */}
+              <div className="absolute top-12 right-12 z-20 animate-float animation-delay-100 hover-lift scale-90 origin-bottom-left">
+                <div className="bg-white px-3 py-2.5 rounded-xl flex items-center gap-2.5 shadow-xl">
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Plane className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-gray-900 font-bold text-[13px]">Udara Express</p>
+                    <p className="text-gray-500 text-[10px]">Estimasi 3-5 hari</p>
                   </div>
                 </div>
               </div>
+
+              {/* Floating Element 2: Laut Reguler (Bottom Left) */}
+              <div className="absolute bottom-12 left-10 z-20 animate-float animation-delay-400 hover-lift scale-90 origin-top-right">
+                <div className="bg-white px-3 py-2.5 rounded-xl flex items-center gap-2.5 shadow-xl">
+                  <div className="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center">
+                    <Ship className="w-4 h-4 text-secondary" />
+                  </div>
+                  <div>
+                    <p className="text-gray-900 font-bold text-[13px]">Laut Reguler</p>
+                    <p className="text-gray-500 text-[10px]">Tarif Hemat</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Element 3: Order Completed (Top Left) */}
+              <div className="absolute top-20 left-16 z-20 animate-float animation-delay-200 hover-lift scale-90 origin-bottom-right">
+                <div className="bg-white px-3 py-1.5 rounded-lg flex items-center gap-1.5 shadow-xl">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+                  <p className="text-gray-800 font-bold text-[11px]">Pesanan Tiba</p>
+                </div>
+              </div>
+
+              {/* Floating Element 4: Ongkir (Bottom Right) */}
+              <div className="absolute bottom-24 right-10 z-20 animate-float animation-delay-500 hover-lift scale-90 origin-top-left">
+                <div className="bg-white px-3 py-2.5 rounded-xl flex flex-col gap-0.5 shadow-xl border border-gray-100">
+                  <div className="flex items-center gap-1.5 text-primary">
+                    <Banknote className="w-3.5 h-3.5" />
+                    <span className="text-[10px] font-bold uppercase">Mulai Dari</span>
+                  </div>
+                  <p className="text-gray-900 font-extrabold text-base">Rp 80.000<span className="text-[10px] text-gray-500 font-normal">/kg</span></p>
+                </div>
+              </div>
+
+              {/* Decorative Lines/Dots connecting elements */}
+              <svg className="absolute inset-0 w-full h-full opacity-30 z-0 pointer-events-none" viewBox="0 0 500 400">
+                <circle cx="250" cy="200" r="110" fill="none" stroke="white" strokeWidth="1" strokeDasharray="4 4" className="animate-[spin_60s_linear_infinite]" />
+                <circle cx="250" cy="200" r="160" fill="none" stroke="white" strokeWidth="1" strokeDasharray="2 6" className="animate-[spin_40s_linear_infinite_reverse]" />
+              </svg>
             </div>
           </div>
         </div>
@@ -298,7 +301,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-10 mb-12">
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <Package className="h-7 w-7 text-accent" />
+                <Drone className="h-7 w-7 text-accent" />
                 <span className="font-bold text-2xl">TitipHub</span>
               </div>
               <p className="text-white/60 text-sm leading-relaxed max-w-sm">
