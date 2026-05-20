@@ -33,9 +33,9 @@ export default function SignUp() {
       <div className="w-full max-w-[900px] bg-white rounded-3xl shadow-2xl relative z-10 flex flex-col md:flex-row overflow-hidden max-h-[95vh] md:max-h-[660px] animate-scale-in">
         
         {/* Left: Info Panel */}
-        <div className="w-full md:w-5/12 p-8 text-white flex flex-col justify-center bg-primary relative">
-          <div className="absolute inset-0 gradient-primary opacity-90"></div>
-          <div className="absolute top-0 right-0 w-48 h-48 bg-accent/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="w-full md:w-5/12 p-8 text-white flex flex-col justify-center bg-oxford-navy-950 relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-oxford-navy-800 to-oxford-navy-950 opacity-95"></div>
+          <div className="absolute top-0 right-0 w-48 h-48 bg-accent/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
           
           <div className="relative z-10 flex flex-col h-full">
             <Link to="/" className="inline-flex items-center gap-2 mb-8 hover:opacity-80 transition-opacity">

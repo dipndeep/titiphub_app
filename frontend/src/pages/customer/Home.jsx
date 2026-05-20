@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Package, FileText, Send, Plane, Ship, Zap, Clock, CheckCircle2, Scale, ShieldCheck } from "lucide-react"
+import { Package, FileText, Send, Plane, Ship, Zap, Clock, CheckCircle2, Scale, ShieldCheck, MapPin } from "lucide-react"
 
 export default function Home() {
   const navigate = useNavigate()
@@ -12,6 +12,7 @@ export default function Home() {
     resiAsal: "",
     tipePengiriman: "",
     kecepatanPengiriman: "",
+    catatan: "",
   })
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
@@ -33,6 +34,7 @@ export default function Home() {
       resiAsal: "",
       tipePengiriman: "",
       kecepatanPengiriman: "",
+      catatan: "",
     })
   }
 
@@ -60,12 +62,12 @@ export default function Home() {
           <div className="lg:col-span-2 flex flex-col gap-6">
             
             {/* Bento: Info Barang */}
-            <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-border/40 animate-fade-in-up animation-delay-100 flex-1">
+            <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-border/40 animate-fade-in-up animation-delay-100 flex-1 flex flex-col">
               <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
                 <FileText className="w-5 h-5 text-secondary" /> Informasi Barang
               </h3>
               
-              <div className="space-y-6">
+              <div className="space-y-5 flex-1 flex flex-col">
                 <div className="space-y-2">
                   <label htmlFor="itemName" className="text-sm font-semibold flex items-center gap-2 text-gray-700">
                     Nama Barang
@@ -78,7 +80,22 @@ export default function Home() {
                     Nomor Resi Pengiriman Asal
                   </label>
                   <Input id="resiAsal" name="resiAsal" autoComplete="off" placeholder="Resi ekspedisi asal..." className="h-12 rounded-xl border-border/60 focus:border-primary bg-gray-50/50" required value={formData.resiAsal} onChange={(e) => setFormData({ ...formData, resiAsal: e.target.value })} />
-                  <p className="text-xs text-muted-foreground">Resi dari jasa ekspedisi yang Anda gunakan untuk mengirim barang ke TitipHub.</p>
+                  <p className="text-xs text-muted-foreground">Resi dari ekspedisi yang Anda gunakan.</p>
+                </div>
+
+                <div className="space-y-2 flex-1 flex flex-col pt-1">
+                  <label htmlFor="catatan" className="text-sm font-semibold flex items-center gap-2 text-gray-700">
+                    Catatan Tambahan <span className="text-muted-foreground font-normal text-xs">(Opsional)</span>
+                  </label>
+                  <textarea 
+                    id="catatan" 
+                    name="catatan" 
+                    autoComplete="off" 
+                    placeholder="Contoh: Tolong tambah bubble wrap, barang mudah pecah..." 
+                    className="flex-1 min-h-[100px] w-full rounded-xl border border-border/60 focus:border-primary focus:ring-1 focus:ring-primary/20 bg-gray-50/50 p-3 text-sm resize-none outline-none transition-colors"
+                    value={formData.catatan}
+                    onChange={(e) => setFormData({ ...formData, catatan: e.target.value })}
+                  />
                 </div>
               </div>
             </div>
@@ -162,56 +179,66 @@ export default function Home() {
               <p className="text-sm font-bold text-primary mb-5 flex items-center gap-2">
                 <Scale className="w-5 h-5" /> Tarif Ongkir per Kg
               </p>
-              <div className="flex flex-col gap-3">
-                <div className="bg-white p-3.5 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+              <div className="flex flex-col gap-4">
+                <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                       <Plane className="w-4 h-4 text-primary" />
                     </div>
-                    <span className="text-[13px] text-gray-700 font-bold">Udara Reguler</span>
+                    <span className="text-sm text-gray-700 font-bold">Udara Reguler</span>
                   </div>
                   <span className="font-bold text-primary text-sm">Rp 85.000</span>
                 </div>
                 
-                <div className="bg-white p-3.5 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
                       <Plane className="w-4 h-4 text-primary" />
                     </div>
-                    <span className="text-[13px] text-gray-700 font-bold">Udara Express</span>
+                    <span className="text-sm text-gray-700 font-bold">Udara Express</span>
                   </div>
                   <span className="font-bold text-primary text-sm">Rp 100.000</span>
                 </div>
                 
-                <div className="bg-white p-3.5 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
+                <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
                       <Ship className="w-4 h-4 text-secondary" />
                     </div>
-                    <span className="text-[13px] text-gray-700 font-bold">Laut Reguler</span>
+                    <span className="text-sm text-gray-700 font-bold">Laut Reguler</span>
                   </div>
                   <span className="font-bold text-primary text-sm">Rp 80.000</span>
                 </div>
                 
-                <div className="bg-white p-3.5 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center">
+                <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
                       <Ship className="w-4 h-4 text-secondary" />
                     </div>
-                    <span className="text-[13px] text-gray-700 font-bold">Laut Express</span>
+                    <span className="text-sm text-gray-700 font-bold">Laut Express</span>
                   </div>
                   <span className="font-bold text-primary text-sm">Rp 95.000</span>
                 </div>
               </div>
 
               {/* Ekstra Info untuk mengisi ruang kosong */}
-              <div className="mt-auto pt-6">
+              <div className="mt-auto pt-6 flex flex-col gap-3">
                 <div className="bg-white/70 p-4 rounded-xl border border-primary/20 flex items-start gap-3 shadow-sm">
                   <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                   <div>
-                    <p className="text-[13px] font-bold text-gray-900 mb-1">100% Aman & Berasuransi</p>
+                    <p className="text-[13px] font-bold text-gray-900 mb-0.5">100% Aman & Berasuransi</p>
                     <p className="text-[11px] text-muted-foreground leading-relaxed">
-                      Harga sudah termasuk asuransi dasar. Jika terjadi kendala, paket Anda dilindungi jaminan TitipHub.
+                      Layanan asuransi dasar untuk semua kendala.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="bg-white/70 p-4 rounded-xl border border-primary/20 flex items-start gap-3 shadow-sm">
+                  <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                  <div>
+                    <p className="text-[13px] font-bold text-gray-900 mb-0.5">Live Tracking 24/7</p>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                      Pantau pergerakan barang Anda secara real-time.
                     </p>
                   </div>
                 </div>
@@ -296,6 +323,14 @@ export default function Home() {
                 <span className="text-muted-foreground">Kecepatan:</span>
                 <span className="font-bold text-secondary capitalize">{formData.kecepatanPengiriman}</span>
               </div>
+              {formData.catatan && (
+                <div className="flex justify-between border-t border-border/40 pt-2 mt-2">
+                  <span className="text-muted-foreground">Catatan:</span>
+                  <span className="font-medium text-gray-900 text-right max-w-[150px] sm:max-w-[180px] truncate" title={formData.catatan}>
+                    {formData.catatan}
+                  </span>
+                </div>
+              )}
             </div>
             
             <div className="flex gap-3">
