@@ -75,7 +75,7 @@ export default function LandingPage() {
                   </Button>
                 </Link>
                 <Link to="/signin">
-                  <Button size="lg" variant="outline" className="bg-transparent h-12 px-8 text-base font-semibold rounded-xl border-white/40 text-white hover:bg-white/10 transition-all duration-300">
+                  <Button size="lg" className="bg-transparent h-12 px-8 text-base font-semibold rounded-xl border border-white/40 text-white hover:bg-white/10 hover:text-white transition-all duration-300">
                     Masuk Akun
                   </Button>
                 </Link>
@@ -164,8 +164,8 @@ export default function LandingPage() {
         </div>
 
         {/* Wave bottom */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full">
+        <div className="absolute bottom-[-1px] left-0 right-0 pointer-events-none">
+          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full block">
             <path d="M0,60 C360,120 720,0 1080,60 C1260,90 1380,80 1440,70 L1440,120 L0,120 Z" fill="hsl(var(--background))" />
           </svg>
         </div>
@@ -285,7 +285,7 @@ export default function LandingPage() {
                   </Button>
                 </Link>
                 <Link to="/signin">
-                  <Button size="lg" variant="outline" className="bg-transparent h-12 px-8 text-base font-semibold rounded-xl border-white/40 text-white hover:bg-white/10 transition-all duration-300">
+                  <Button size="lg" className="bg-transparent h-12 px-8 text-base font-semibold rounded-xl border border-white/40 text-white hover:bg-white/10 hover:text-white transition-all duration-300">
                     Saya Sudah Punya Akun
                   </Button>
                 </Link>
@@ -296,7 +296,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className="bg-oxford-navy-950 text-white pt-16 pb-8">
+      <footer className="bg-oxford-navy-900 text-white pt-16 pb-8">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-10 mb-12">
             <div className="md:col-span-2">
@@ -319,17 +319,17 @@ export default function LandingPage() {
             <div>
               <h4 className="font-semibold mb-4 text-accent">Sosial Media</h4>
               <div className="flex items-center gap-4">
-                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-oxford-navy-950 transition-colors" title="Facebook">
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-oxford-navy-900 transition-colors" title="Facebook">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                     <path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z" />
                   </svg>
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-oxford-navy-950 transition-colors" title="Instagram">
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-oxford-navy-900 transition-colors" title="Instagram">
                   <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
                     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
                   </svg>
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-oxford-navy-950 transition-colors" title="TikTok">
+                <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-oxford-navy-900 transition-colors" title="TikTok">
                   <svg viewBox="0 0 448 512" fill="currentColor" className="w-5 h-5">
                     <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/>
                   </svg>

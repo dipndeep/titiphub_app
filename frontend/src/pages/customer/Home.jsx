@@ -57,16 +57,16 @@ export default function Home() {
         </div>
 
         <form onSubmit={handleSubmit} autoComplete="off" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
+
           {/* Kolom Kiri: Info Barang & Opsi Pengiriman */}
           <div className="lg:col-span-2 flex flex-col gap-6">
-            
+
             {/* Bento: Info Barang */}
             <div className="bg-white p-6 md:p-8 rounded-[2rem] shadow-sm border border-border/40 animate-fade-in-up animation-delay-100 flex-1 flex flex-col">
               <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
                 <FileText className="w-5 h-5 text-secondary" /> Informasi Barang
               </h3>
-              
+
               <div className="space-y-5 flex-1 flex flex-col">
                 <div className="space-y-2">
                   <label htmlFor="itemName" className="text-sm font-semibold flex items-center gap-2 text-gray-700">
@@ -87,11 +87,11 @@ export default function Home() {
                   <label htmlFor="catatan" className="text-sm font-semibold flex items-center gap-2 text-gray-700">
                     Catatan Tambahan <span className="text-muted-foreground font-normal text-xs">(Opsional)</span>
                   </label>
-                  <textarea 
-                    id="catatan" 
-                    name="catatan" 
-                    autoComplete="off" 
-                    placeholder="Contoh: Tolong tambah bubble wrap, barang mudah pecah..." 
+                  <textarea
+                    id="catatan"
+                    name="catatan"
+                    autoComplete="off"
+                    placeholder="Contoh: Tolong tambah bubble wrap, barang mudah pecah..."
                     className="flex-1 min-h-[100px] w-full rounded-xl border border-border/60 focus:border-primary focus:ring-1 focus:ring-primary/20 bg-gray-50/50 p-3 text-sm resize-none outline-none transition-colors"
                     value={formData.catatan}
                     onChange={(e) => setFormData({ ...formData, catatan: e.target.value })}
@@ -110,11 +110,10 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-3 h-32">
                   <button
                     type="button"
-                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-all duration-300 ${
-                      formData.tipePengiriman === "udara"
+                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-all duration-300 ${formData.tipePengiriman === "udara"
                         ? "border-primary bg-primary/5 shadow-sm"
                         : "border-border/60 hover:border-primary/40 bg-gray-50/50"
-                    }`}
+                      }`}
                     onClick={() => setFormData({ ...formData, tipePengiriman: "udara" })}
                   >
                     <Plane className={`w-6 h-6 ${formData.tipePengiriman === "udara" ? "text-primary" : "text-muted-foreground"}`} />
@@ -122,11 +121,10 @@ export default function Home() {
                   </button>
                   <button
                     type="button"
-                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-all duration-300 ${
-                      formData.tipePengiriman === "laut"
+                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-all duration-300 ${formData.tipePengiriman === "laut"
                         ? "border-primary bg-primary/5 shadow-sm"
                         : "border-border/60 hover:border-primary/40 bg-gray-50/50"
-                    }`}
+                      }`}
                     onClick={() => setFormData({ ...formData, tipePengiriman: "laut" })}
                   >
                     <Ship className={`w-6 h-6 ${formData.tipePengiriman === "laut" ? "text-primary" : "text-muted-foreground"}`} />
@@ -143,11 +141,10 @@ export default function Home() {
                 <div className="grid grid-cols-2 gap-3 h-32">
                   <button
                     type="button"
-                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-all duration-300 ${
-                      formData.kecepatanPengiriman === "reguler"
+                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-all duration-300 ${formData.kecepatanPengiriman === "reguler"
                         ? "border-secondary bg-secondary/5 shadow-sm"
                         : "border-border/60 hover:border-secondary/40 bg-gray-50/50"
-                    }`}
+                      }`}
                     onClick={() => setFormData({ ...formData, kecepatanPengiriman: "reguler" })}
                   >
                     <Clock className={`w-6 h-6 ${formData.kecepatanPengiriman === "reguler" ? "text-secondary" : "text-muted-foreground"}`} />
@@ -155,11 +152,10 @@ export default function Home() {
                   </button>
                   <button
                     type="button"
-                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-all duration-300 ${
-                      formData.kecepatanPengiriman === "express"
+                    className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 transition-all duration-300 ${formData.kecepatanPengiriman === "express"
                         ? "border-secondary bg-secondary/5 shadow-sm"
                         : "border-border/60 hover:border-secondary/40 bg-gray-50/50"
-                    }`}
+                      }`}
                     onClick={() => setFormData({ ...formData, kecepatanPengiriman: "express" })}
                   >
                     <Zap className={`w-6 h-6 ${formData.kecepatanPengiriman === "express" ? "text-secondary" : "text-muted-foreground"}`} />
@@ -173,7 +169,7 @@ export default function Home() {
 
           {/* Kolom Kanan: Tarif & Submit */}
           <div className="lg:col-span-1 flex flex-col gap-6 animate-fade-in-up animation-delay-300">
-            
+
             {/* Bento: Tarif */}
             <div className="bg-primary/5 p-6 md:p-8 rounded-[2rem] border border-primary/15 shadow-sm flex-1 flex flex-col">
               <p className="text-sm font-bold text-primary mb-5 flex items-center gap-2">
@@ -189,7 +185,7 @@ export default function Home() {
                   </div>
                   <span className="font-bold text-primary text-sm">Rp 85.000</span>
                 </div>
-                
+
                 <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -199,7 +195,7 @@ export default function Home() {
                   </div>
                   <span className="font-bold text-primary text-sm">Rp 100.000</span>
                 </div>
-                
+
                 <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
@@ -209,7 +205,7 @@ export default function Home() {
                   </div>
                   <span className="font-bold text-primary text-sm">Rp 80.000</span>
                 </div>
-                
+
                 <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
@@ -256,7 +252,7 @@ export default function Home() {
                 Kirim Data Barang
               </Button>
             </div>
-            
+
           </div>
         </form>
       </div>
@@ -266,24 +262,24 @@ export default function Home() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="bg-white rounded-[2rem] p-6 md:p-8 max-w-md w-full shadow-2xl animate-in zoom-in-95 duration-200 text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-accent/15 mb-6">
-              <CheckCircle2 className="w-10 h-10 text-accent" />
+              <CheckCircle2 className="w-10 h-10 text-primary" />
             </div>
             <h2 className="text-2xl font-bold mb-3 text-gray-900">Proses Berhasil!</h2>
             <p className="text-muted-foreground mb-6 text-sm">
               Barang <span className="font-semibold text-foreground">"{formData.itemName}"</span> telah berhasil didaftarkan. Anda akan mendapatkan resi TitipHub setelah Admin memproses paket Anda.
             </p>
-            
+
             <div className="flex flex-col gap-3">
-              <Button 
-                type="button" 
-                className="w-full h-12 rounded-xl bg-accent text-white shadow-lg shadow-accent/20 hover:opacity-90 transition-opacity"
+              <Button
+                type="button"
+                className="w-full h-12 rounded-xl bg-primary text-white font-semibold shadow-lg shadow-primary/10 hover:bg-primary/95 transition-all"
                 onClick={() => navigate("/tracking")}
               >
                 Lacak Pesanan Saya
               </Button>
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 className="w-full h-12 rounded-xl border-border/60 hover:bg-gray-100 transition-colors"
                 onClick={handleInputLagi}
               >
@@ -305,7 +301,7 @@ export default function Home() {
               <h3 className="text-xl font-bold text-gray-900 mb-2">Konfirmasi Data Barang</h3>
               <p className="text-sm text-muted-foreground">Pastikan detail barang dan opsi pengiriman Anda sudah benar sebelum dikirim.</p>
             </div>
-            
+
             <div className="bg-gray-50 p-4 rounded-2xl mb-6 space-y-3 text-sm">
               <div className="flex justify-between pb-2 border-b border-border/40">
                 <span className="text-muted-foreground">Nama Barang:</span>
@@ -332,18 +328,18 @@ export default function Home() {
                 </div>
               )}
             </div>
-            
+
             <div className="flex gap-3">
-              <Button 
-                type="button" 
-                variant="outline" 
+              <Button
+                type="button"
+                variant="outline"
                 className="flex-1 h-12 rounded-xl border-border/60 hover:bg-gray-100 transition-colors"
                 onClick={() => setShowConfirmModal(false)}
               >
                 Batal
               </Button>
-              <Button 
-                type="button" 
+              <Button
+                type="button"
                 className="flex-1 h-12 rounded-xl bg-primary text-white shadow-lg shadow-primary/20 hover:opacity-90 transition-opacity"
                 onClick={handleConfirmSubmit}
               >
