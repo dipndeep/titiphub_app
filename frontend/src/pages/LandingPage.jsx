@@ -106,7 +106,7 @@ export default function LandingPage() {
 
               {/* Center Core Element */}
               <div className="relative z-10 w-24 h-24 glass rounded-full flex items-center justify-center border-4 border-white/20 shadow-2xl animate-float">
-                <Store className="w-10 h-10 text-primary drop-shadow-lg" />
+                <img src="/titiphub-icon.png" alt="TitipHub Logo" className="w-12 h-12 object-contain" />
               </div>
 
               {/* Floating Element 1: Udara Express (Top Right) */}
@@ -301,7 +301,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-10 mb-12">
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <Drone className="h-7 w-7 text-accent" />
+                <img src="/titiphub-icon.png" alt="TitipHub Logo" className="w-8 h-8 object-contain" />
                 <span className="font-bold text-2xl">TitipHub</span>
               </div>
               <p className="text-white/60 text-sm leading-relaxed max-w-sm">
@@ -331,7 +331,7 @@ export default function LandingPage() {
                 </a>
                 <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-accent hover:text-oxford-navy-900 transition-colors" title="TikTok">
                   <svg viewBox="0 0 448 512" fill="currentColor" className="w-5 h-5">
-                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z"/>
+                    <path d="M448,209.91a210.06,210.06,0,0,1-122.77-39.25V349.38A162.55,162.55,0,1,1,185,188.31V278.2a74.62,74.62,0,1,0,52.23,71.18V0l88,0a121.18,121.18,0,0,0,1.86,22.17h0A122.18,122.18,0,0,0,381,102.39a121.43,121.43,0,0,0,67,20.14Z" />
                   </svg>
                 </a>
               </div>

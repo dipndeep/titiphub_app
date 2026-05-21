@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { Package, Menu, X, Drone, LogIn, UserPlus, LayoutDashboard, Truck, LogOut, AlertTriangle } from "lucide-react"
+import { Package, Menu, X, LogIn, UserPlus, LayoutDashboard, Truck, LogOut, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function Navbar() {
@@ -71,9 +71,7 @@ export default function Navbar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className={`flex items-center gap-2.5 font-bold text-xl tracking-tight transition-colors duration-300 ${isLight ? "text-gray-900" : "text-white"}`}>
-          <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-colors duration-300 ${isLight ? "bg-primary/10" : "bg-accent/20"}`}>
-            <Drone className={`h-5 w-5 transition-colors duration-300 ${isLight ? "text-primary" : "text-accent"}`} />
-          </div>
+          <img src="/titiphub-icon.png" alt="TitipHub Logo" className="w-9 h-9 object-contain" />
           <span>TitipHub</span>
         </Link>
 
