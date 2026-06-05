@@ -39,7 +39,7 @@ export default function Home() {
   }
 
   return (
-    <div className="pt-24 pb-16 px-4">
+    <div className="pt-32 pb-16 px-4">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-10 animate-fade-in-up flex flex-col md:flex-row md:items-end justify-between gap-4">
@@ -48,7 +48,7 @@ export default function Home() {
               <Package className="w-6 h-6 text-primary" />
             </div>
             <h1 className="text-3xl md:text-4xl font-bold mb-2">
-              <span className="gradient-text">Kirim Barang via Jastip</span>
+              <span className="text-primary">Kirim Barang via Jastip</span>
             </h1>
             <p className="text-muted-foreground text-base max-w-md">
               Daftarkan barang kiriman Anda ke TitipHub untuk proses jastip yang aman dan terpantau.

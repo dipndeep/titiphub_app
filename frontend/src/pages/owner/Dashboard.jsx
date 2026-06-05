@@ -12,7 +12,7 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="pt-24 pb-16 px-4">
+    <div className="pt-32 pb-16 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-4 animate-fade-in-up">
           <div>

@@ -76,12 +76,12 @@ export default function Tracking() {
   const getStepIndex = (status) => steps.indexOf(status)
 
   return (
-    <div className="pt-24 pb-16 px-4">
+    <div className="pt-32 pb-16 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8 animate-fade-in-up">
           <h1 className="text-3xl md:text-4xl font-bold mb-3">
-            <span className="gradient-text">Lacak Pengiriman</span>
+            <span className="text-primary">Lacak Pengiriman</span>
           </h1>
           <p className="text-muted-foreground text-lg">Pantau status pengiriman barang Anda ke TitipHub secara real-time.</p>
         </div>

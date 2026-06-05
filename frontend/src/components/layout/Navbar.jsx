@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { Package, Menu, X, LogIn, UserPlus, LayoutDashboard, Truck, LogOut, AlertTriangle } from "lucide-react"
+import { Package, Menu, X, LogIn, UserPlus, LayoutDashboard, Truck, LogOut, AlertTriangle, Home, Sparkles, HelpCircle, MessageSquare } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export default function Navbar() {
@@ -23,6 +23,18 @@ export default function Navbar() {
     if (link.label === "Logout") {
       e.preventDefault()
       setShowLogoutConfirm(true)
+    } else if (link.path.startsWith("/#")) {
+      setMobileOpen(false)
+      if (location.pathname === "/") {
+        e.preventDefault()
+        const id = link.path.replace("/#", "")
+        const element = document.getElementById(id)
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" })
+        }
+      }
+    } else {
+      setMobileOpen(false)
     }
   }
 
@@ -51,7 +63,21 @@ export default function Navbar() {
         { path: "/", label: "Logout", icon: <LogOut className="w-3.5 h-3.5" /> },
       ]
     }
-    return []
+    return [
+      { path: "/#home", label: "Beranda", icon: <Home className="w-3.5 h-3.5" /> },
+      { path: "/#features", label: "Fitur", icon: <Sparkles className="w-3.5 h-3.5" /> },
+      { path: "/#how-it-works", label: "Cara Kerja", icon: <HelpCircle className="w-3.5 h-3.5" /> },
+      { path: "/#testimonials", label: "Testimoni", icon: <MessageSquare className="w-3.5 h-3.5" /> },
+    ]
+  }
+
+  const isLinkActive = (link) => {
+    if (location.pathname === link.path) return true
+    if (isLanding && link.path.startsWith("/#")) {
+      const hash = link.path.replace("/", "")
+      return location.hash === hash || (location.hash === "" && link.path === "/#home")
+    }
+    return false
   }
 
   const links = getLinks()
@@ -69,32 +95,42 @@ export default function Navbar() {
     <>
       <nav className={`fixed top-4 left-0 right-0 mx-auto w-[calc(100%-2rem)] md:w-[calc(100%-3rem)] max-w-7xl z-50 rounded-2xl border transition-all duration-300 overflow-hidden ${navBg}`}>
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo */}
-        <Link to="/" className={`flex items-center gap-2.5 font-bold text-xl tracking-tight transition-colors duration-300 ${isLight ? "text-gray-900" : "text-white"}`}>
-          <img src="/titiphub-icon.png" alt="TitipHub Logo" className="w-9 h-9 object-contain" />
-          <span>TitipHub</span>
-        </Link>
+        {/* Logo (Left) */}
+        <div className="flex-1 flex justify-start">
+          <Link to="/" className={`flex items-center gap-2.5 font-bold text-xl tracking-tight transition-colors duration-300 ${isLight ? "text-gray-900" : "text-white"}`}>
+            <div className="relative w-9 h-9 shrink-0">
+              <img 
+                src="/titiphub-icon-white.png" 
+                alt="TitipHub Logo" 
+                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${isLight ? "opacity-0" : "opacity-100"}`} 
+              />
+              <img 
+                src="/titiphub-icon-black.png" 
+                alt="TitipHub Logo" 
+                className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${isLight ? "opacity-100" : "opacity-0"}`} 
+              />
+            </div>
+            <span>TitipHub</span>
+          </Link>
+        </div>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-1">
-          {links.map((link) => {
-            const isActive = location.pathname === link.path
-            const isLogout = link.label === "Logout"
+        {/* Center Links (Middle) */}
+        <div className="hidden md:flex items-center justify-center gap-1">
+          {links.filter(link => link.label !== "Logout").map((link) => {
+            const isActive = isLinkActive(link)
             return (
               <Link
                 key={link.path + link.label}
                 to={link.path}
                 onClick={(e) => handleLinkClick(e, link)}
                 className={`text-sm font-medium px-4 py-2 rounded-lg transition-all duration-300 flex items-center gap-1.5 ${
-                  isLogout
-                    ? "bg-red-500 hover:bg-red-600 text-white shadow-sm shadow-red-500/10 ml-2"
-                    : isActive
-                      ? isLight
-                        ? "bg-primary/10 text-primary"
-                        : "bg-white/15 text-accent"
-                      : isLight
-                        ? "text-gray-600 hover:text-gray-900 hover:bg-gray-100/80"
-                        : "text-white/80 hover:text-white hover:bg-white/10"
+                  isActive
+                    ? isLight
+                      ? "bg-primary/10 text-primary"
+                      : "bg-white/15 text-accent"
+                    : isLight
+                      ? "text-gray-600 hover:text-gray-900 hover:bg-gray-100/80"
+                      : "text-white/80 hover:text-white hover:bg-white/10"
                 }`}
               >
                 {link.icon}
@@ -102,8 +138,27 @@ export default function Navbar() {
               </Link>
             )
           })}
+        </div>
+
+        {/* Right Actions (Right) */}
+        <div className="flex-1 flex justify-end items-center gap-2">
+          {/* Logout Button (if present in links) */}
+          {links.filter(link => link.label === "Logout").map((link) => {
+            return (
+              <Link
+                key={link.path + link.label}
+                to={link.path}
+                onClick={(e) => handleLinkClick(e, link)}
+                className="hidden md:flex text-sm font-medium px-4 py-2 rounded-lg transition-all duration-300 items-center gap-1.5 bg-red-500 hover:bg-red-600 text-white shadow-sm shadow-red-500/10"
+              >
+                {link.icon}
+                <span>{link.label}</span>
+              </Link>
+            )
+          })}
+
           {showAuthButtons && (
-            <div className="flex items-center gap-2 ml-4">
+            <div className="hidden md:flex items-center gap-2">
               <Link to="/signin">
                 <Button 
                   size="sm" 
@@ -133,19 +188,19 @@ export default function Navbar() {
               </Link>
             </div>
           )}
-        </div>
 
-        {/* Mobile Hamburger */}
-        <button
-          className={`md:hidden p-2 rounded-lg transition-colors ${
-            isLight 
-              ? "text-gray-800 hover:bg-gray-100" 
-              : "text-white hover:bg-white/10"
-          }`}
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+          {/* Mobile Hamburger */}
+          <button
+            className={`md:hidden p-2 rounded-lg transition-colors ${
+              isLight 
+                ? "text-gray-800 hover:bg-gray-100" 
+                : "text-white hover:bg-white/10"
+            }`}
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -165,7 +220,7 @@ export default function Navbar() {
                 className={`flex items-center gap-2.5 py-2.5 px-3 text-sm font-medium rounded-lg transition-colors ${
                   isLogout
                     ? "bg-red-500 hover:bg-red-600 text-white mt-4 shadow-sm shadow-red-500/10"
-                    : location.pathname === link.path
+                    : isLinkActive(link)
                       ? isLight
                         ? "bg-primary/10 text-primary"
                         : "bg-white/15 text-accent"

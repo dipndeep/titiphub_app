@@ -50,10 +50,23 @@ export default function LandingPage() {
     return () => clearInterval(timer)
   }, [testimonials.length])
 
+  useEffect(() => {
+    if (window.location.hash) {
+      const id = window.location.hash.replace("#", "")
+      const timer = setTimeout(() => {
+        const element = document.getElementById(id)
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth" })
+        }
+      }, 150)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
   return (
     <div className="overflow-hidden">
       {/* ===== HERO SECTION ===== */}
-      <section className="gradient-hero relative pt-32 pb-40 lg:pt-40 lg:pb-48">
+      <section id="home" className="gradient-hero relative pt-32 pb-40 lg:pt-40 lg:pb-48">
         {/* Background decorations */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-[600px] h-[600px] rounded-full bg-accent/10 blur-3xl animate-float"></div>
@@ -182,7 +195,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== FEATURES SECTION ===== */}
-      <section className="py-8 md:py-10">
+      <section id="features" className="py-8 md:py-10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-1.5 rounded-full mb-4">Fitur Unggulan</span>
@@ -292,7 +305,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== HOW IT WORKS ===== */}
-      <section className="py-8 md:py-10 bg-gradient-to-b from-transparent via-primary/[0.02] to-transparent">
+      <section id="how-it-works" className="py-8 md:py-10 bg-gradient-to-b from-transparent via-primary/[0.02] to-transparent">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <span className="inline-block bg-secondary/10 text-secondary text-sm font-semibold px-4 py-1.5 rounded-full mb-4">Cara Kerja</span>
@@ -476,7 +489,7 @@ export default function LandingPage() {
       </section>
 
       {/* ===== TESTIMONIALS ===== */}
-      <section className="py-8 md:py-10">
+      <section id="testimonials" className="py-8 md:py-10">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <span className="inline-block bg-accent/15 text-primary text-sm font-semibold px-4 py-1.5 rounded-full mb-4">Testimoni</span>
@@ -595,7 +608,7 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-10 mb-12">
             <div className="md:col-span-2">
               <div className="flex items-center gap-2 mb-4">
-                <img src="/titiphub-icon.png" alt="TitipHub Logo" className="w-8 h-8 object-contain" />
+                <img src="/titiphub-icon-white.png" alt="TitipHub Logo" className="w-8 h-8 object-contain" />
                 <span className="font-bold text-2xl">TitipHub</span>
               </div>
               <p className="text-white/60 text-sm leading-relaxed max-w-sm">

@@ -100,11 +100,11 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="pt-24 pb-16 px-4">
+    <div className="pt-32 pb-16 px-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 animate-fade-in-up">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Admin <span className="gradient-text">Dashboard</span></h1>
+            <h1 className="text-3xl text-primary font-bold mb-2">Admin Dashboard</h1>
             <p className="text-muted-foreground">Kelola kiriman pelanggan, timbang paket, terbitkan resi, dan perbarui status.</p>
           </div>
           <div className="flex items-center gap-3">
