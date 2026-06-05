@@ -59,15 +59,15 @@ export default function Navbar() {
   const isLight = !isLanding || scrolled
   const navBg = isLanding
     ? scrolled 
-      ? "bg-white/85 backdrop-blur-md border-b border-gray-200/50 shadow-sm" 
-      : "bg-transparent border-b border-transparent"
-    : "bg-white/85 backdrop-blur-md border-b border-gray-200/50 shadow-sm"
+      ? "bg-white/80 backdrop-blur-md border-gray-200/50 shadow-lg" 
+      : "bg-white/10 backdrop-blur-md border-white/10 shadow-lg"
+    : "bg-white/80 backdrop-blur-md border-gray-200/50 shadow-lg"
 
   if (isAuthPage) return null;
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${navBg}`}>
+      <nav className={`fixed top-4 left-0 right-0 mx-auto w-[calc(100%-2rem)] md:w-[calc(100%-3rem)] max-w-7xl z-50 rounded-2xl border transition-all duration-300 overflow-hidden ${navBg}`}>
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className={`flex items-center gap-2.5 font-bold text-xl tracking-tight transition-colors duration-300 ${isLight ? "text-gray-900" : "text-white"}`}>
