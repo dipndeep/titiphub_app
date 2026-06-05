@@ -14,10 +14,11 @@ Aplikasi ini mendukung 3 jenis pengguna (Customer, Manager, dan Owner) dengan fi
 - **Manajemen Pesanan:** Menerima atau menolak pesanan dari pelanggan.
 - **Pembaruan Status:** Mengubah status barang (contoh: diproses, dibeli, dikirim, selesai).
 - **Kalkulasi Biaya:** Menentukan harga, ongkos kirim berdasarkan berat dan rute.
+- **Daftar Pengguna:** Mengakses direktori semua akun terdaftar (customer, manager, owner) lengkap dengan tautan kontak WhatsApp langsung.
 
 ### 3. Owner (Pemilik)
 - **Master Dashboard:** Memantau rekapitulasi performa jastip dan riwayat transaksi.
-- **Manajemen Pengguna:** Menambahkan akun Manager baru atau mengelola akun yang bermasalah.
+- **Daftar Pengguna:** Mengakses direktori semua akun terdaftar lengkap dengan statistik per peran dan tautan kontak WhatsApp langsung.
 
 ## 🚀 Tech Stack
 
