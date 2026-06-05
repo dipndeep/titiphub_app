@@ -44,6 +44,10 @@ export default function LandingPage() {
   ]
 
   useEffect(() => {
+    document.title = "TitipHub — Jasa Titip Mudah & Cepat"
+  }, [])
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setActiveTestimonial((prev) => (prev + 1) % testimonials.length)
     }, 6000)

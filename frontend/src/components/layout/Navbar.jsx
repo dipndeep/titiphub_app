@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { Package, Menu, X, LogIn, UserPlus, LayoutDashboard, Truck, LogOut, AlertTriangle, Home, Sparkles, HelpCircle, MessageSquare } from "lucide-react"
+import { Package, Menu, X, LogIn, UserPlus, LayoutDashboard, Truck, LogOut, AlertTriangle, Home, Sparkles, HelpCircle, MessageSquare, Crown, UserCheck, User, Users } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "../../contexts/AuthContext"
 
 export default function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
+  const { user, logout } = useAuth()
   const [mobileOpen, setMobileOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
@@ -40,34 +42,41 @@ export default function Navbar() {
 
   const handleConfirmLogout = () => {
     setShowLogoutConfirm(false)
-    navigate("/")
+    logout()
+    navigate("/", { replace: true })
   }
 
   const getLinks = () => {
-    if (location.pathname.startsWith("/manager")) {
+    if (!user) {
+      return [
+        { path: "/#home", label: "Beranda", icon: <Home className="w-3.5 h-3.5" /> },
+        { path: "/#features", label: "Fitur", icon: <Sparkles className="w-3.5 h-3.5" /> },
+        { path: "/#how-it-works", label: "Cara Kerja", icon: <HelpCircle className="w-3.5 h-3.5" /> },
+        { path: "/#testimonials", label: "Testimoni", icon: <MessageSquare className="w-3.5 h-3.5" /> },
+      ]
+    }
+    
+    if (user.role === "manager") {
       return [
         { path: "/manager", label: "Dashboard", icon: <LayoutDashboard className="w-3.5 h-3.5" /> },
+        { path: "/users", label: "Daftar Pengguna", icon: <Users className="w-3.5 h-3.5" /> },
         { path: "/", label: "Logout", icon: <LogOut className="w-3.5 h-3.5" /> },
       ]
     }
-    if (location.pathname.startsWith("/owner")) {
+    
+    if (user.role === "owner") {
       return [
         { path: "/owner", label: "Dashboard", icon: <LayoutDashboard className="w-3.5 h-3.5" /> },
+        { path: "/users", label: "Daftar Pengguna", icon: <Users className="w-3.5 h-3.5" /> },
         { path: "/", label: "Logout", icon: <LogOut className="w-3.5 h-3.5" /> },
       ]
     }
-    if (location.pathname === "/order" || location.pathname === "/tracking") {
-      return [
-        { path: "/order", label: "Titip Barang", icon: <Package className="w-3.5 h-3.5" /> },
-        { path: "/tracking", label: "Lacak Pesanan", icon: <Truck className="w-3.5 h-3.5" /> },
-        { path: "/", label: "Logout", icon: <LogOut className="w-3.5 h-3.5" /> },
-      ]
-    }
+    
+    // Default logged in customer
     return [
-      { path: "/#home", label: "Beranda", icon: <Home className="w-3.5 h-3.5" /> },
-      { path: "/#features", label: "Fitur", icon: <Sparkles className="w-3.5 h-3.5" /> },
-      { path: "/#how-it-works", label: "Cara Kerja", icon: <HelpCircle className="w-3.5 h-3.5" /> },
-      { path: "/#testimonials", label: "Testimoni", icon: <MessageSquare className="w-3.5 h-3.5" /> },
+      { path: "/order", label: "Titip Barang", icon: <Package className="w-3.5 h-3.5" /> },
+      { path: "/tracking", label: "Lacak Pesanan", icon: <Truck className="w-3.5 h-3.5" /> },
+      { path: "/", label: "Logout", icon: <LogOut className="w-3.5 h-3.5" /> },
     ]
   }
 
@@ -81,7 +90,7 @@ export default function Navbar() {
   }
 
   const links = getLinks()
-  const showAuthButtons = location.pathname === "/"
+  const showAuthButtons = !user && !isAuthPage
   const isLight = !isLanding || scrolled
   const navBg = isLanding
     ? scrolled 
@@ -142,6 +151,22 @@ export default function Navbar() {
 
         {/* Right Actions (Right) */}
         <div className="flex-1 flex justify-end items-center gap-2">
+          {/* User Profile Info on Desktop if logged in */}
+          {user && (
+            <span className={`hidden lg:inline-flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-lg ${isLight ? 'bg-gray-100 text-gray-700' : 'bg-white/10 text-white'}`}>
+              {user.role === "owner" && <Crown className="w-3.5 h-3.5 text-amber-500" />}
+              {user.role === "manager" && <UserCheck className="w-3.5 h-3.5 text-secondary" />}
+              {user.role === "customer" && <User className="w-3.5 h-3.5 text-primary" />}
+              <span>
+                Halo,{" "}
+                <span className="text-primary font-bold">
+                  {user.role === "owner" ? "Owner" : user.role === "manager" ? "Manager" : "Customer"}{" "}
+                  {user.name.split(" ")[0]}
+                </span>
+              </span>
+            </span>
+          )}
+
           {/* Logout Button (if present in links) */}
           {links.filter(link => link.label === "Logout").map((link) => {
             return (
@@ -210,6 +235,21 @@ export default function Navbar() {
             ? "bg-white/95 border-gray-100" 
             : "glass-dark border-white/10"
         }`}>
+          {user && (
+            <div className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg ${isLight ? 'bg-gray-50 text-gray-500' : 'bg-white/5 text-white/60'} mb-2`}>
+              {user.role === "owner" && <Crown className="w-3.5 h-3.5 text-amber-500" />}
+              {user.role === "manager" && <UserCheck className="w-3.5 h-3.5 text-secondary" />}
+              {user.role === "customer" && <User className="w-3.5 h-3.5 text-primary" />}
+              <span>
+                Masuk sebagai:{" "}
+                <span className="font-bold text-primary">
+                  {user.role === "owner" ? "Owner" : user.role === "manager" ? "Manager" : "Customer"}{" "}
+                  {user.name.split(" ")[0]}
+                </span>
+              </span>
+            </div>
+          )}
+          
           {links.map((link) => {
             const isLogout = link.label === "Logout"
             return (

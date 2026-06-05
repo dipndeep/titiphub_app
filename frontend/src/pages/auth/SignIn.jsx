@@ -1,24 +1,63 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Package, Mail, Lock, Eye, EyeOff, Drone } from "lucide-react"
+import { Mail, Lock, Eye, EyeOff, Drone, Loader2, AlertCircle } from "lucide-react"
+import { useAuth } from "../../contexts/AuthContext"
 
 export default function SignIn() {
   const navigate = useNavigate()
+  const { login, user } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({ email: "", password: "" })
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  // Document Title
+  useEffect(() => {
+    document.title = "Masuk | TitipHub"
+  }, [])
+
+  // Auto redirect if user is already logged in
+  useEffect(() => {
+    if (user) {
+      if (user.role === "owner") navigate("/owner", { replace: true })
+      else if (user.role === "manager") navigate("/manager", { replace: true })
+      else navigate("/order", { replace: true })
+    }
+  }, [user, navigate])
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (formData.email.includes("owner")) navigate("/owner")
-    else if (formData.email.includes("manager")) navigate("/manager")
-    else navigate("/order")
+    setError("")
+    setLoading(true)
+
+    try {
+      const loggedInUser = await login(formData.email, formData.password)
+      // Redirect based on role
+      if (loggedInUser.role === "owner") {
+        navigate("/owner")
+      } else if (loggedInUser.role === "manager") {
+        navigate("/manager")
+      } else {
+        navigate("/order")
+      }
+    } catch (err) {
+      console.error(err)
+      setError(err.response?.data?.error || "Gagal masuk. Periksa kembali email dan kata sandi Anda.")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Helper function to autofill credentials for testing
+  const handleAutofill = (email, password) => {
+    setFormData({ email, password })
   }
 
   return (
-    <div className="min-h-screen gradient-hero flex items-center justify-center px-4 py-12 relative">
+    <div className="min-h-screen gradient-hero flex items-center justify-center px-4 py-24 relative">
       {/* Background decorations */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] rounded-full bg-accent/10 blur-3xl animate-float"></div>
@@ -44,11 +83,18 @@ export default function SignIn() {
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-4">
+              {error && (
+                <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl flex items-start gap-2.5 text-sm animate-shake">
+                  <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{error}</span>
+                </div>
+              )}
+
               <div className="space-y-2">
                 <label htmlFor="email" className="text-sm font-medium">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="email" type="email" placeholder="nama@email.com" className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
+                  <Input id="email" type="email" placeholder="nama@email.com" className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} disabled={loading} />
                 </div>
               </div>
 
@@ -59,7 +105,7 @@ export default function SignIn() {
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="password" type={showPassword ? "text" : "password"} placeholder="Masukkan kata sandi" className="pl-10 pr-10 h-11 rounded-xl border-border/60 focus:border-primary" required value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                  <Input id="password" type={showPassword ? "text" : "password"} placeholder="Masukkan kata sandi" className="pl-10 pr-10 h-11 rounded-xl border-border/60 focus:border-primary" required value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} disabled={loading} />
                   <button type="button" className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors" onClick={() => setShowPassword(!showPassword)}>
                     {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </button>
@@ -67,7 +113,16 @@ export default function SignIn() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full h-11 text-base rounded-xl font-semibold shadow-lg shadow-primary/20">Masuk</Button>
+              <Button type="submit" className="w-full h-11 text-base rounded-xl font-semibold shadow-lg shadow-primary/20" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Memproses...
+                  </>
+                ) : (
+                  "Masuk"
+                )}
+              </Button>
               <p className="text-sm text-muted-foreground text-center">
                 Belum punya akun?{" "}
                 <Link to="/signup" className="text-secondary font-semibold hover:underline transition-colors">Daftar sekarang</Link>
@@ -76,10 +131,29 @@ export default function SignIn() {
           </form>
         </Card>
 
+        {/* Demo Credentials Helper Card */}
         <div className="mt-6 p-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/10">
-          <p className="text-xs text-white/60 text-center">
-            <span className="font-semibold text-accent">💡 Demo:</span> Gunakan email mengandung <code className="bg-white/10 px-1.5 py-0.5 rounded text-xs text-white/80">owner</code> atau <code className="bg-white/10 px-1.5 py-0.5 rounded text-xs text-white/80">manager</code> untuk masuk ke dashboard role tersebut.
+          <p className="text-xs font-semibold text-accent mb-2 flex items-center gap-1.5">
+            <span>💡 Akun Uji Coba (Demo):</span>
           </p>
+          <div className="grid grid-cols-3 gap-2 text-[10px] text-white/80">
+            <button type="button" onClick={() => handleAutofill("owner@titiphub.com", "owner123")} className="p-2 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-left">
+              <span className="font-bold text-accent block">Owner</span>
+              <span>owner@titiphub.com</span>
+              <span className="block text-white/40">Pass: owner123</span>
+            </button>
+            <button type="button" onClick={() => handleAutofill("manager@titiphub.com", "manager123")} className="p-2 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-left">
+              <span className="font-bold text-accent block">Manager</span>
+              <span>manager@titiphub.com</span>
+              <span className="block text-white/40">Pass: manager123</span>
+            </button>
+            <button type="button" onClick={() => handleAutofill("budi@email.com", "customer123")} className="p-2 rounded bg-white/5 border border-white/10 hover:bg-white/10 transition-colors text-left">
+              <span className="font-bold text-accent block">Customer (Budi)</span>
+              <span>budi@email.com</span>
+              <span className="block text-white/40">Pass: customer123</span>
+            </button>
+          </div>
+          <p className="text-[10px] text-white/40 text-center mt-2">Klik tombol di atas untuk mengisi data otomatis.</p>
         </div>
       </div>
     </div>

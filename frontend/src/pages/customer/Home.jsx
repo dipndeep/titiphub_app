@@ -1,9 +1,10 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Package, FileText, Send, Plane, Ship, Zap, Clock, CheckCircle2, Scale, ShieldCheck, MapPin } from "lucide-react"
+import { Package, FileText, Send, Plane, Ship, Zap, Clock, CheckCircle2, Scale, ShieldCheck, MapPin, Loader2, AlertCircle } from "lucide-react"
+import api from "../../utils/api"
 
 export default function Home() {
   const navigate = useNavigate()
@@ -14,17 +15,69 @@ export default function Home() {
     kecepatanPengiriman: "",
     catatan: "",
   })
+  
+  // Dynamic tariffs state
+  const [tariffs, setTariffs] = useState({
+    "Udara-Reguler": 85000,
+    "Udara-Express": 100000,
+    "Laut-Reguler": 80000,
+    "Laut-Express": 95000
+  })
+  const [tariffsLoading, setTariffsLoading] = useState(true)
+
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
+  const [submitLoading, setSubmitLoading] = useState(false)
+  const [error, setError] = useState("")
+
+  // Set document title
+  useEffect(() => {
+    document.title = "Kirim Jastip | TitipHub"
+  }, [])
+
+  // Fetch live tariffs from API
+  useEffect(() => {
+    const fetchTariffs = async () => {
+      try {
+        const res = await api.get("/tariffs")
+        if (res.data?.tariffs) {
+          setTariffs(res.data.tariffs)
+        }
+      } catch (err) {
+        console.error("Gagal memuat tarif terupdate, menggunakan fallback:", err)
+      } finally {
+        setTariffsLoading(false)
+      }
+    }
+    fetchTariffs()
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault()
+    setError("")
     setShowConfirmModal(true)
   }
 
-  const handleConfirmSubmit = () => {
+  const handleConfirmSubmit = async () => {
     setShowConfirmModal(false)
-    setShowSuccessModal(true)
+    setSubmitLoading(true)
+    setError("")
+
+    try {
+      await api.post("/orders", {
+        itemName: formData.itemName,
+        resiAsal: formData.resiAsal,
+        tipePengiriman: formData.tipePengiriman,
+        kecepatan: formData.kecepatanPengiriman,
+        catatan: formData.catatan
+      })
+      setShowSuccessModal(true)
+    } catch (err) {
+      console.error(err)
+      setError(err.response?.data?.error || "Gagal membuat pesanan. Silakan coba beberapa saat lagi.")
+    } finally {
+      setSubmitLoading(false)
+    }
   }
 
   const handleInputLagi = () => {
@@ -36,6 +89,15 @@ export default function Home() {
       kecepatanPengiriman: "",
       catatan: "",
     })
+  }
+
+  // Format currency helper
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      maximumFractionDigits: 0
+    }).format(number)
   }
 
   return (
@@ -56,6 +118,16 @@ export default function Home() {
           </div>
         </div>
 
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 text-red-600 rounded-2xl flex items-start gap-3 text-sm animate-shake">
+            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold">Gagal Mengirim Data</p>
+              <p>{error}</p>
+            </div>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} autoComplete="off" className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
           {/* Kolom Kiri: Info Barang & Opsi Pengiriman */}
@@ -72,14 +144,14 @@ export default function Home() {
                   <label htmlFor="itemName" className="text-sm font-semibold flex items-center gap-2 text-gray-700">
                     Nama Barang
                   </label>
-                  <Input id="itemName" name="itemName" autoComplete="off" placeholder="Contoh: Sepatu Nike Air Max" className="h-12 rounded-xl border-border/60 focus:border-primary bg-gray-50/50" required value={formData.itemName} onChange={(e) => setFormData({ ...formData, itemName: e.target.value })} />
+                  <Input id="itemName" name="itemName" autoComplete="off" placeholder="Contoh: Sepatu Nike Air Max" className="h-12 rounded-xl border-border/60 focus:border-primary bg-gray-50/50" required value={formData.itemName} onChange={(e) => setFormData({ ...formData, itemName: e.target.value })} disabled={submitLoading} />
                 </div>
 
                 <div className="space-y-2">
                   <label htmlFor="resiAsal" className="text-sm font-semibold flex items-center gap-2 text-gray-700">
                     Nomor Resi Pengiriman Asal
                   </label>
-                  <Input id="resiAsal" name="resiAsal" autoComplete="off" placeholder="Resi ekspedisi asal..." className="h-12 rounded-xl border-border/60 focus:border-primary bg-gray-50/50" required value={formData.resiAsal} onChange={(e) => setFormData({ ...formData, resiAsal: e.target.value })} />
+                  <Input id="resiAsal" name="resiAsal" autoComplete="off" placeholder="Resi ekspedisi asal..." className="h-12 rounded-xl border-border/60 focus:border-primary bg-gray-50/50" required value={formData.resiAsal} onChange={(e) => setFormData({ ...formData, resiAsal: e.target.value })} disabled={submitLoading} />
                   <p className="text-xs text-muted-foreground">Resi dari ekspedisi yang Anda gunakan.</p>
                 </div>
 
@@ -95,6 +167,7 @@ export default function Home() {
                     className="flex-1 min-h-[100px] w-full rounded-xl border border-border/60 focus:border-primary focus:ring-1 focus:ring-primary/20 bg-gray-50/50 p-3 text-sm resize-none outline-none transition-colors"
                     value={formData.catatan}
                     onChange={(e) => setFormData({ ...formData, catatan: e.target.value })}
+                    disabled={submitLoading}
                   />
                 </div>
               </div>
@@ -115,6 +188,7 @@ export default function Home() {
                         : "border-border/60 hover:border-primary/40 bg-gray-50/50"
                       }`}
                     onClick={() => setFormData({ ...formData, tipePengiriman: "udara" })}
+                    disabled={submitLoading}
                   >
                     <Plane className={`w-6 h-6 ${formData.tipePengiriman === "udara" ? "text-primary" : "text-muted-foreground"}`} />
                     <span className={`text-xs font-bold ${formData.tipePengiriman === "udara" ? "text-primary" : "text-muted-foreground"}`}>Udara</span>
@@ -126,6 +200,7 @@ export default function Home() {
                         : "border-border/60 hover:border-primary/40 bg-gray-50/50"
                       }`}
                     onClick={() => setFormData({ ...formData, tipePengiriman: "laut" })}
+                    disabled={submitLoading}
                   >
                     <Ship className={`w-6 h-6 ${formData.tipePengiriman === "laut" ? "text-primary" : "text-muted-foreground"}`} />
                     <span className={`text-xs font-bold ${formData.tipePengiriman === "laut" ? "text-primary" : "text-muted-foreground"}`}>Laut</span>
@@ -146,6 +221,7 @@ export default function Home() {
                         : "border-border/60 hover:border-secondary/40 bg-gray-50/50"
                       }`}
                     onClick={() => setFormData({ ...formData, kecepatanPengiriman: "reguler" })}
+                    disabled={submitLoading}
                   >
                     <Clock className={`w-6 h-6 ${formData.kecepatanPengiriman === "reguler" ? "text-secondary" : "text-muted-foreground"}`} />
                     <span className={`text-xs font-bold ${formData.kecepatanPengiriman === "reguler" ? "text-secondary" : "text-muted-foreground"}`}>Reguler</span>
@@ -157,6 +233,7 @@ export default function Home() {
                         : "border-border/60 hover:border-secondary/40 bg-gray-50/50"
                       }`}
                     onClick={() => setFormData({ ...formData, kecepatanPengiriman: "express" })}
+                    disabled={submitLoading}
                   >
                     <Zap className={`w-6 h-6 ${formData.kecepatanPengiriman === "express" ? "text-secondary" : "text-muted-foreground"}`} />
                     <span className={`text-xs font-bold ${formData.kecepatanPengiriman === "express" ? "text-secondary" : "text-muted-foreground"}`}>Express</span>
@@ -175,47 +252,55 @@ export default function Home() {
               <p className="text-sm font-bold text-primary mb-5 flex items-center gap-2">
                 <Scale className="w-5 h-5" /> Tarif Ongkir per Kg
               </p>
-              <div className="flex flex-col gap-4">
-                <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Plane className="w-4 h-4 text-primary" />
-                    </div>
-                    <span className="text-sm text-gray-700 font-bold">Udara Reguler</span>
-                  </div>
-                  <span className="font-bold text-primary text-sm">Rp 85.000</span>
+              
+              {tariffsLoading ? (
+                <div className="flex-1 flex flex-col items-center justify-center py-10 gap-2">
+                  <Loader2 className="w-6 h-6 text-primary animate-spin" />
+                  <span className="text-xs text-muted-foreground">Memuat tarif live...</span>
                 </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Plane className="w-4 h-4 text-primary" />
+                      </div>
+                      <span className="text-sm text-gray-700 font-bold">Udara Reguler</span>
+                    </div>
+                    <span className="font-bold text-primary text-sm">{formatRupiah(tariffs["Udara-Reguler"])}</span>
+                  </div>
 
-                <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <Plane className="w-4 h-4 text-primary" />
+                  <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Plane className="w-4 h-4 text-primary" />
+                      </div>
+                      <span className="text-sm text-gray-700 font-bold">Udara Express</span>
                     </div>
-                    <span className="text-sm text-gray-700 font-bold">Udara Express</span>
+                    <span className="font-bold text-primary text-sm">{formatRupiah(tariffs["Udara-Express"])}</span>
                   </div>
-                  <span className="font-bold text-primary text-sm">Rp 100.000</span>
-                </div>
 
-                <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
-                      <Ship className="w-4 h-4 text-secondary" />
+                  <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
+                        <Ship className="w-4 h-4 text-secondary" />
+                      </div>
+                      <span className="text-sm text-gray-700 font-bold">Laut Reguler</span>
                     </div>
-                    <span className="text-sm text-gray-700 font-bold">Laut Reguler</span>
+                    <span className="font-bold text-primary text-sm">{formatRupiah(tariffs["Laut-Reguler"])}</span>
                   </div>
-                  <span className="font-bold text-primary text-sm">Rp 80.000</span>
-                </div>
 
-                <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
-                      <Ship className="w-4 h-4 text-secondary" />
+                  <div className="bg-white py-4 px-4 rounded-xl border border-border/40 shadow-sm flex items-center justify-between gap-1 hover:-translate-y-1 transition-transform">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-lg bg-secondary/10 flex items-center justify-center">
+                        <Ship className="w-4 h-4 text-secondary" />
+                      </div>
+                      <span className="text-sm text-gray-700 font-bold">Laut Express</span>
                     </div>
-                    <span className="text-sm text-gray-700 font-bold">Laut Express</span>
+                    <span className="font-bold text-primary text-sm">{formatRupiah(tariffs["Laut-Express"])}</span>
                   </div>
-                  <span className="font-bold text-primary text-sm">Rp 95.000</span>
                 </div>
-              </div>
+              )}
 
               {/* Ekstra Info untuk mengisi ruang kosong */}
               <div className="mt-auto pt-6 flex flex-col gap-3">
@@ -245,11 +330,20 @@ export default function Home() {
             <div className="mt-auto">
               <Button
                 type="submit"
-                disabled={!formData.tipePengiriman || !formData.kecepatanPengiriman}
+                disabled={!formData.tipePengiriman || !formData.kecepatanPengiriman || submitLoading}
                 className="w-full h-[72px] text-lg rounded-[2rem] font-bold shadow-lg shadow-primary/20 gap-3 disabled:opacity-50 transition-transform hover:-translate-y-1"
               >
-                <Send className="w-6 h-6" />
-                Kirim Data Barang
+                {submitLoading ? (
+                  <>
+                    <Loader2 className="w-6 h-6 animate-spin" />
+                    Mengirim Data...
+                  </>
+                ) : (
+                  <>
+                    <Send className="w-6 h-6" />
+                    Kirim Data Barang
+                  </>
+                )}
               </Button>
             </div>
 
@@ -352,4 +446,3 @@ export default function Home() {
     </div>
   )
 }
-
