@@ -26,6 +26,29 @@ router.get("/", async (req, res) => {
       .filter(o => o.status === "Completed" && o.ongkir)
       .reduce((sum, o) => sum + o.ongkir, 0)
 
+    // Total weight (sum of beratKg of orders where beratKg is set)
+    const ordersWithWeight = allOrders.filter(o => o.beratKg !== null && o.beratKg !== undefined)
+    const totalWeight = ordersWithWeight.reduce((sum, o) => sum + o.beratKg, 0)
+
+    // Average weight
+    const averageWeight = ordersWithWeight.length > 0
+      ? parseFloat((totalWeight / ordersWithWeight.length).toFixed(2))
+      : 0
+
+    // Average ongkir (from orders with ongkir)
+    const ordersWithOngkir = allOrders.filter(o => o.ongkir !== null && o.ongkir !== undefined)
+    const averageOngkir = ordersWithOngkir.length > 0
+      ? Math.round(ordersWithOngkir.reduce((sum, o) => sum + o.ongkir, 0) / ordersWithOngkir.length)
+      : 0
+
+    // Shipping distribution (Udara vs Laut)
+    const shippingTipeUdara = allOrders.filter(o => o.tipePengiriman === "udara").length
+    const shippingTipeLaut = allOrders.filter(o => o.tipePengiriman === "laut").length
+
+    // Speed distribution (Reguler vs Express)
+    const speedReguler = allOrders.filter(o => o.kecepatan === "reguler").length
+    const speedExpress = allOrders.filter(o => o.kecepatan === "express").length
+
     // Total customers
     const [totalCustomers] = await db
       .select({ count: count() })
@@ -40,6 +63,19 @@ router.get("/", async (req, res) => {
         completedOrders,
         totalRevenue,
         totalCustomers: totalCustomers?.count || 0,
+        totalWeight,
+        averageWeight,
+        averageOngkir,
+        distribution: {
+          tipePengiriman: {
+            udara: shippingTipeUdara,
+            laut: shippingTipeLaut
+          },
+          kecepatan: {
+            reguler: speedReguler,
+            express: speedExpress
+          }
+        }
       },
     })
   } catch (err) {

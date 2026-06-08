@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import { AuthProvider } from "./contexts/AuthContext"
 import ProtectedRoute from "./components/ProtectedRoute"
 import Navbar from "./components/layout/Navbar"
+import SidebarLayout from "./components/layout/SidebarLayout"
 import NotificationListener from "./components/NotificationListener"
 import LandingPage from "./pages/LandingPage"
 import SignIn from "./pages/auth/SignIn"
@@ -12,6 +13,7 @@ import CustomerTracking from "./pages/customer/Tracking"
 import ManagerDashboard from "./pages/manager/Dashboard"
 import OwnerDashboard from "./pages/owner/Dashboard"
 import UsersList from "./pages/shared/UsersList"
+import ChangePassword from "./pages/shared/ChangePassword"
 
 function App() {
   return (
@@ -44,7 +46,9 @@ function App() {
               path="/manager"
               element={
                 <ProtectedRoute allowedRoles={["manager"]}>
-                  <ManagerDashboard />
+                  <SidebarLayout>
+                    <ManagerDashboard />
+                  </SidebarLayout>
                 </ProtectedRoute>
               }
             />
@@ -52,7 +56,9 @@ function App() {
               path="/owner"
               element={
                 <ProtectedRoute allowedRoles={["owner"]}>
-                  <OwnerDashboard />
+                  <SidebarLayout>
+                    <OwnerDashboard />
+                  </SidebarLayout>
                 </ProtectedRoute>
               }
             />
@@ -60,7 +66,17 @@ function App() {
               path="/users"
               element={
                 <ProtectedRoute allowedRoles={["manager", "owner"]}>
-                  <UsersList />
+                  <SidebarLayout>
+                    <UsersList />
+                  </SidebarLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/change-password"
+              element={
+                <ProtectedRoute allowedRoles={["customer", "manager", "owner"]}>
+                  <ChangePassword />
                 </ProtectedRoute>
               }
             />

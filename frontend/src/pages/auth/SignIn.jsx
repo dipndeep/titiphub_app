@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Mail, Lock, Eye, EyeOff, Drone, Loader2, AlertCircle } from "lucide-react"
+import { Mail, Lock, Eye, EyeOff, Drone, Loader2, AlertCircle, CheckCircle2 } from "lucide-react"
 import { useAuth } from "../../contexts/AuthContext"
+import api from "../../utils/api"
 
 export default function SignIn() {
   const navigate = useNavigate()
@@ -13,6 +14,11 @@ export default function SignIn() {
   const [formData, setFormData] = useState({ email: "", password: "" })
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+
+  // Forgot password states
+  const [showForgotSuccessModal, setShowForgotSuccessModal] = useState(false)
+  const [forgotSuccessMessage, setForgotSuccessMessage] = useState("")
+  const [forgotLoading, setForgotLoading] = useState(false)
 
   // Document Title
   useEffect(() => {
@@ -48,6 +54,26 @@ export default function SignIn() {
       setError(err.response?.data?.error || "Gagal masuk. Periksa kembali email dan kata sandi Anda.")
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleForgotPassword = async () => {
+    setError("")
+    if (!formData.email) {
+      setError("Silakan isi alamat email Anda di kolom email terlebih dahulu untuk meminta reset password.")
+      return
+    }
+
+    setForgotLoading(true)
+    try {
+      const res = await api.post("/auth/forgot-password", { email: formData.email })
+      setForgotSuccessMessage(res.data?.message || "Berhasil menginformasikan ke manager untuk mereset kata sandi.")
+      setShowForgotSuccessModal(true)
+    } catch (err) {
+      console.error(err)
+      setError(err.response?.data?.error || "Gagal mengirim permintaan reset password. Pastikan email terdaftar.")
+    } finally {
+      setForgotLoading(false)
     }
   }
 
@@ -94,14 +120,22 @@ export default function SignIn() {
                 <label htmlFor="email" className="text-sm font-medium">Email</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="email" type="email" placeholder="nama@email.com" className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} disabled={loading} />
+                  <Input id="email" type="email" placeholder="nama@email.com" className="pl-10 h-11 rounded-xl border-border/60 focus:border-primary" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} disabled={loading || forgotLoading} />
                 </div>
               </div>
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <label htmlFor="password" className="text-sm font-medium">Kata Sandi</label>
-                  <button type="button" className="text-xs text-secondary hover:text-secondary/80 hover:underline transition-colors">Lupa kata sandi?</button>
+                  <button 
+                    type="button" 
+                    onClick={handleForgotPassword}
+                    disabled={loading || forgotLoading}
+                    className="text-xs text-secondary hover:text-secondary/80 hover:underline transition-colors flex items-center gap-1 font-semibold"
+                  >
+                    {forgotLoading && <Loader2 className="w-3 h-3 animate-spin text-secondary" />}
+                    Lupa kata sandi?
+                  </button>
                 </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -113,7 +147,7 @@ export default function SignIn() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col gap-4">
-              <Button type="submit" className="w-full h-11 text-base rounded-xl font-semibold shadow-lg shadow-primary/20" disabled={loading}>
+              <Button type="submit" className="w-full h-11 text-base rounded-xl font-semibold shadow-lg shadow-primary/20" disabled={loading || forgotLoading}>
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -156,6 +190,37 @@ export default function SignIn() {
           <p className="text-[10px] text-white/40 text-center mt-2">Klik tombol di atas untuk mengisi data otomatis.</p>
         </div>
       </div>
+
+      {/* Forgot Password Success Modal */}
+      {showForgotSuccessModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 animate-in fade-in duration-200">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+            onClick={() => setShowForgotSuccessModal(false)}
+          ></div>
+          
+          {/* Modal Content */}
+          <div className="relative bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl text-center text-gray-900 border border-gray-150 z-10 transform scale-100 transition-all duration-300 animate-in zoom-in-95">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-50 text-green-500 mb-4 animate-bounce">
+              <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+            </div>
+            <h3 className="text-lg font-extrabold mb-2 text-emerald-700">Permintaan Dikirim</h3>
+            <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+              {forgotSuccessMessage}
+            </p>
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                className="flex-1 h-11 bg-primary hover:bg-primary/95 text-white font-bold rounded-xl transition-all shadow-md shadow-primary/10 text-sm"
+                onClick={() => setShowForgotSuccessModal(false)}
+              >
+                Tutup
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

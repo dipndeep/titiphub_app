@@ -10,6 +10,8 @@ export const users = sqliteTable("users", {
   passwordHash: text("password_hash").notNull(),
   role: text("role", { enum: ["customer", "manager", "owner"] }).notNull().default("customer"),
   createdAt: text("created_at").default(sql`(datetime('now'))`),
+  passwordUpdatedAt: text("password_updated_at"),
+  resetRequested: integer("reset_requested", { mode: "boolean" }).default(false),
 })
 
 // ========== ORDERS TABLE ==========

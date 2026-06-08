@@ -66,8 +66,16 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  const updateUser = (newUserData) => {
+    const storedUser = localStorage.getItem("titiphub_user")
+    const parsedUser = storedUser ? JSON.parse(storedUser) : {}
+    const updated = { ...parsedUser, ...user, ...newUserData }
+    localStorage.setItem("titiphub_user", JSON.stringify(updated))
+    setUser(updated)
+  }
+
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   )

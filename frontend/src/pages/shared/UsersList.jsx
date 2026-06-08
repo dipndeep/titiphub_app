@@ -3,8 +3,9 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { Users, Search, MessageSquare, Loader2, AlertCircle, RefreshCw } from "lucide-react"
+import { Users, Search, MessageSquare, Loader2, AlertCircle, RefreshCw, KeyRound, X, Save, CheckCircle2 } from "lucide-react"
 import api from "../../utils/api"
+import { useAuth } from "../../contexts/AuthContext"
 
 function formatWhatsAppLink(phone) {
   if (!phone) return null
@@ -16,10 +17,56 @@ function formatWhatsAppLink(phone) {
 }
 
 export default function UsersList() {
+  const { user: currentUser } = useAuth()
   const [users, setUsers] = useState([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [error, setError] = useState("")
+
+  // Reset Password Modal State
+  const [showResetModal, setShowResetModal] = useState(false)
+  const [selectedUser, setSelectedUser] = useState(null)
+  const [newPassword, setNewPassword] = useState("titiphub123")
+  const [resetLoading, setResetLoading] = useState(false)
+  const [resetSuccessMessage, setResetSuccessMessage] = useState("")
+  const [resetErrorMessage, setResetErrorMessage] = useState("")
+
+  const canReset = (targetUser) => {
+    if (!currentUser) return false
+    // Cannot reset own password from this panel
+    if (currentUser.id === targetUser.id) return false
+    // Manager cannot reset Owner password
+    if (currentUser.role === "manager" && targetUser.role === "owner") return false
+    return true
+  }
+
+  const handleOpenResetModal = (targetUser) => {
+    setSelectedUser(targetUser)
+    setNewPassword("titiphub123")
+    setResetSuccessMessage("")
+    setResetErrorMessage("")
+    setShowResetModal(true)
+  }
+
+  const handleResetPassword = async () => {
+    if (!selectedUser) return
+    setResetLoading(true)
+    setResetSuccessMessage("")
+    setResetErrorMessage("")
+    try {
+      const res = await api.patch(`/auth/users/${selectedUser.id}/reset-password`, {
+        newPassword
+      })
+      setResetSuccessMessage(res.data?.message || "Password berhasil direset.")
+      // Update local state to clear resetRequested flag
+      setUsers(prev => prev.map(u => u.id === selectedUser.id ? { ...u, resetRequested: false } : u))
+    } catch (err) {
+      console.error(err)
+      setResetErrorMessage(err.response?.data?.error || "Gagal mereset password.")
+    } finally {
+      setResetLoading(false)
+    }
+  }
 
   // Set document title
   useEffect(() => {
@@ -58,7 +105,7 @@ export default function UsersList() {
   const totalOwners = users.filter(u => u.role === "owner").length
 
   return (
-    <div className="pt-32 pb-16 px-4">
+    <div className="pb-16">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 animate-fade-in-up">
@@ -192,18 +239,37 @@ export default function UsersList() {
                           {item.createdAt ? new Date(item.createdAt).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }) : '—'}
                         </td>
                         <td className="px-6 py-4 text-right">
-                          {waLink ? (
-                            <a 
-                              href={waLink} 
-                              target="_blank" 
-                              rel="noreferrer" 
-                              className="inline-flex items-center gap-1 text-xs font-bold text-green-600 hover:text-green-700 hover:underline transition-colors"
-                            >
-                              <MessageSquare className="w-3.5 h-3.5" /> Hubungi WA
-                            </a>
-                          ) : (
-                            <span className="text-xs text-muted-foreground italic">No WA tidak ada</span>
-                          )}
+                          <div className="flex justify-end items-center gap-3">
+                            {waLink ? (
+                              <a 
+                                href={waLink} 
+                                target="_blank" 
+                                rel="noreferrer" 
+                                className="inline-flex items-center gap-1.5 text-xs font-bold text-green-600 hover:text-green-700 hover:underline transition-colors"
+                              >
+                                <MessageSquare className="w-3.5 h-3.5" /> Hubungi WA
+                              </a>
+                            ) : (
+                              <span className="text-xs text-muted-foreground italic mr-2">No WA tidak ada</span>
+                            )}
+                            
+                            {canReset(item) && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-7 text-[11px] font-bold gap-1 border-primary/20 text-primary hover:bg-primary/10 hover:text-primary rounded-lg shrink-0 relative"
+                                onClick={() => handleOpenResetModal(item)}
+                              >
+                                <KeyRound className="w-3.5 h-3.5" /> Reset
+                                {item.resetRequested && (
+                                  <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
+                                  </span>
+                                )}
+                              </Button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     )
@@ -214,6 +280,151 @@ export default function UsersList() {
           </div>
         </Card>
       </div>
+
+      {/* Reset Password Modal */}
+      {showResetModal && selectedUser && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => !resetLoading && setShowResetModal(false)}></div>
+          
+          {/* Modal Content */}
+          <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto animate-in zoom-in-95 duration-200 overflow-hidden text-gray-900 text-left">
+            {/* Header */}
+            <div className="flex items-center justify-between p-5 border-b border-border/40">
+              <div>
+                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <KeyRound className="w-5 h-5 text-primary" />
+                  Reset Password
+                </h3>
+                <p className="text-xs text-muted-foreground mt-0.5">Reset kata sandi pengguna TitipHub.</p>
+              </div>
+              <button 
+                onClick={() => !resetLoading && setShowResetModal(false)} 
+                className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                disabled={resetLoading}
+              >
+                <X className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-5 space-y-4">
+              {/* User info summary */}
+              <div className="bg-gray-50 p-3.5 rounded-xl border border-border/40 text-sm space-y-1.5">
+                <p className="flex justify-between"><span className="text-muted-foreground">Nama:</span> <strong className="text-gray-800">{selectedUser.name}</strong></p>
+                <p className="flex justify-between"><span className="text-muted-foreground">Email:</span> <strong className="text-gray-800">{selectedUser.email}</strong></p>
+                <p className="flex justify-between">
+                  <span className="text-muted-foreground">Role:</span> 
+                  <Badge className="border-0 px-2 py-0.5 rounded-md font-semibold text-xs capitalize bg-primary/10 text-primary">
+                    {selectedUser.role}
+                  </Badge>
+                </p>
+              </div>
+
+              {resetSuccessMessage ? (
+                <div className="bg-green-50 border border-green-150 p-4 rounded-xl text-green-700 text-sm space-y-2">
+                  <p className="font-bold flex items-center gap-1.5 text-green-800">
+                    <CheckCircle2 className="w-4 h-4 text-green-600" /> Password Berhasil Direset!
+                  </p>
+                  <p className="text-xs text-green-700">{resetSuccessMessage}</p>
+                  <div className="bg-white p-2.5 rounded-lg border font-mono font-bold text-center text-primary text-base select-all cursor-pointer" title="Klik untuk menyeleksi">
+                    {newPassword}
+                  </div>
+                  <p className="text-[10px] text-green-600/80 italic text-center">
+                    Salin password di atas dan berikan kepada pengguna agar mereka bisa masuk kembali.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {resetErrorMessage && (
+                    <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-xs rounded-lg flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{resetErrorMessage}</span>
+                    </div>
+                  )}
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-gray-700">Password Baru</label>
+                    <Input
+                      type="text"
+                      className="h-10 rounded-lg text-sm font-semibold border-border/60"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      disabled={resetLoading}
+                      placeholder="Masukkan password baru..."
+                    />
+                    <div className="flex gap-1.5 mt-2">
+                      <button
+                        type="button"
+                        onClick={() => setNewPassword("titiphub123")}
+                        className="text-[10px] font-bold text-primary bg-primary/10 hover:bg-primary/15 px-2.5 py-1 rounded"
+                        disabled={resetLoading}
+                      >
+                        Default (titiphub123)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#"
+                          let pass = ""
+                          for (let i = 0; i < 8; i++) {
+                            pass += chars.charAt(Math.floor(Math.random() * chars.length))
+                          }
+                          setNewPassword(pass)
+                        }}
+                        className="text-[10px] font-bold text-secondary bg-secondary/10 hover:bg-secondary/15 px-2.5 py-1 rounded"
+                        disabled={resetLoading}
+                      >
+                        Acak (8 Karakter)
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-2 p-5 border-t border-border/40 bg-gray-50/50">
+              {resetSuccessMessage ? (
+                <Button 
+                  className="rounded-lg h-9 px-4 bg-primary hover:bg-primary/95 text-white" 
+                  onClick={() => setShowResetModal(false)}
+                >
+                  Tutup
+                </Button>
+              ) : (
+                <>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="rounded-lg h-9 px-4 border-border/60" 
+                    onClick={() => setShowResetModal(false)} 
+                    disabled={resetLoading}
+                  >
+                    Batal
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    className="rounded-lg h-9 px-4 bg-primary hover:bg-primary/95 text-white gap-1.5" 
+                    onClick={handleResetPassword} 
+                    disabled={resetLoading || newPassword.length < 6}
+                  >
+                    {resetLoading ? (
+                      <>
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" /> Mengubah...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="w-3.5 h-3.5" /> Simpan Password
+                      </>
+                    )}
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

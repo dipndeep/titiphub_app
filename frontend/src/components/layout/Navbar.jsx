@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
-import { Package, Menu, X, LogIn, UserPlus, LayoutDashboard, Truck, LogOut, AlertTriangle, Home, Sparkles, HelpCircle, MessageSquare, Crown, UserCheck, User, Users } from "lucide-react"
+import { Package, Menu, X, LogIn, UserPlus, LayoutDashboard, Truck, LogOut, AlertTriangle, Home, Sparkles, HelpCircle, MessageSquare, Crown, UserCheck, User, Users, KeyRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "../../contexts/AuthContext"
 
@@ -76,6 +76,7 @@ export default function Navbar() {
     return [
       { path: "/order", label: "Titip Barang", icon: <Package className="w-3.5 h-3.5" /> },
       { path: "/tracking", label: "Lacak Pesanan", icon: <Truck className="w-3.5 h-3.5" /> },
+      { path: "/change-password", label: "Ganti Password", icon: <KeyRound className="w-3.5 h-3.5" /> },
       { path: "/", label: "Logout", icon: <LogOut className="w-3.5 h-3.5" /> },
     ]
   }
@@ -98,7 +99,7 @@ export default function Navbar() {
       : "bg-white/10 backdrop-blur-md border-white/10 shadow-lg"
     : "bg-white/80 backdrop-blur-md border-gray-200/50 shadow-lg"
 
-  if (isAuthPage) return null;
+  if (isAuthPage || (user && (user.role === "owner" || user.role === "manager"))) return null;
 
   return (
     <>
